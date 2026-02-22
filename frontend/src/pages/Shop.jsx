@@ -37,9 +37,8 @@ const Shop = () => {
   return (
     <div className="shop-page">
       <div className="shop-header">
-        <h1>Our Bakery Collection</h1>
+        <h1>Our Collection</h1>
         <p>Freshly baked with love, just for you</p>
-
         <div className="search-bar">
           <input
             type="text"

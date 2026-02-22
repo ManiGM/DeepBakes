@@ -10,67 +10,69 @@ import plumCake4 from "../assets/plumcake4.png";
 import plumCake1 from "../assets/plumcake1.png";
 import plumcake5 from "../assets/plumcake5.png";
 import plumCake3 from "../assets/plumcake3.png";
+import cookies from "../assets/cookies.jpg";
+import malaiToast from "../assets/MalaiToast.jpg";
 
 const Home = () => {
   // Featured cakes data
- const featuredCakes = [
-   {
-     id: 1,
-     name: "Classic Plum Cake",
-     description: "Rich, moist plum cake with premium dry fruits",
-     price: "$34.99",
-     image: plumcake,
-     badge: "Bestseller",
-   },
-   {
-     id: 2,
-     name: "Belgian Chocolate Cake",
-     description: "Decadent chocolate layers with ganache",
-     price: "$39.99",
-     image: plumCake2,
-     badge: "New",
-   },
-   {
-     id: 3,
-     name: "Mixed Fruit Cake",
-     description: "Fresh fruits and cream in every bite",
-     price: "$29.99",
-     image: plumCake3,
-     badge: "Seasonal",
-   },
-   {
-     id: 4,
-     name: "Red Velvet Cake",
-     description: "Classic red velvet with cream cheese frosting",
-     price: "$37.99",
-     image: plumCake4,
-     badge: "Popular",
-   },
- ];
+  const featuredCakes = [
+    {
+      id: 1,
+      name: "Classic Plum Cake",
+      description: "Rich, moist plum cake with premium dry fruits",
+      price: "$34.99",
+      image: plumcake,
+      badge: "Bestseller",
+    },
+    {
+      id: 2,
+      name: "Belgian Chocolate Cake",
+      description: "Decadent chocolate layers with ganache",
+      price: "$39.99",
+      image: plumCake2,
+      badge: "New",
+    },
+    {
+      id: 3,
+      name: "Mixed Fruit Cake",
+      description: "Fresh fruits and cream in every bite",
+      price: "$29.99",
+      image: plumCake3,
+      badge: "Seasonal",
+    },
+    {
+      id: 4,
+      name: "Red Velvet Cake",
+      description: "Classic red velvet with cream cheese frosting",
+      price: "$37.99",
+      image: plumCake4,
+      badge: "Popular",
+    },
+  ];
 
   const testimonials = [
     {
       id: 1,
-      name: "Sarah Johnson",
+      name: "Mani",
       comment:
         "The best plum cake I've ever tasted! Perfect for our Christmas party.",
       rating: 5,
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
+      image: "https://i.pravatar.cc/150?img=12",
     },
     {
       id: 2,
-      name: "Michael Chen",
+      name: "Poojita",
       comment: "Ordered a custom birthday cake and it was absolutely gorgeous!",
       rating: 5,
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      image: "https://i.pravatar.cc/150?img=47",
     },
     {
       id: 3,
-      name: "Priya Patel",
+      name: "Praveen",
       comment:
         "Fresh, delicious, and delivered on time. My new favorite bakery!",
       rating: 5,
-      image: {plumcake5},
+      image: "https://i.pravatar.cc/150?img=33",
     },
   ];
 
@@ -80,7 +82,7 @@ const Home = () => {
       <section className="hero-section1">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <span className="hero-badge">Artisanal Bakery</span>
+          <span className="hero-badge">Deep Bakes</span>
           <h1 className="hero-title">
             Artisanal Bakes for
             <span className="highlight"> Every Occasion</span>
@@ -125,7 +127,7 @@ const Home = () => {
       {/* Featured Categories */}
       <section className="categories-section">
         <div className="section-header">
-          <span className="section-subtitle">What We Offer</span>
+          <span className="section-subtitle"></span>
           <h2 className="section-title">Our Specialties</h2>
         </div>
         <div className="categories-grid">
@@ -138,16 +140,16 @@ const Home = () => {
           </div>
           <div className="category-card">
             <div className="category-image">
-              <img src={plumCake2} alt="Chocolate Cakes" />
+              <img src={cookies} alt="Cookies" />
             </div>
-            <h3>Chocolate Cakes</h3>
+            <h3>Cookies</h3>
             <p>Decadent and indulgent</p>
           </div>
           <div className="category-card">
             <div className="category-image">
-              <img src={plumCake4} />
+              <img src={malaiToast} />
             </div>
-            <h3>Fruit Cakes</h3>
+            <h3>Malai Toast</h3>
             <p>Fresh and fruity delights</p>
           </div>
           <div className="category-card">
@@ -234,7 +236,7 @@ const Home = () => {
             <span className="feature-icon">🚚</span>
           </div>
           <h3>Free Delivery</h3>
-          <p>On orders over $50, delivered to your doorstep</p>
+          <p>On orders over ₹500, delivered to your doorstep</p>
         </div>
         <div className="feature">
           <div className="feature-icon-wrapper">
@@ -277,7 +279,7 @@ const Home = () => {
       {/* Instagram Gallery */}
       <section className="gallery-section">
         <div className="section-header">
-          <span className="section-subtitle">Follow Us on Instagram</span>
+          <span className="section-subtitle">Contact Us On</span>
           {/* <h2 className="section-title">@deep_bakes_</h2> */}
         </div>
         {/* Contact Information Section */}

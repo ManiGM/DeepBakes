@@ -25,64 +25,64 @@ const Register = () => {
     </svg>
   );
 
- const EyeClosed = () => (
-   <svg
-     width="20"
-     height="20"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     strokeWidth="2"
-     strokeLinecap="round"
-     strokeLinejoin="round"
-   >
-     {/* Eye shape */}
-     <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-10-7-10-7a21.77 21.77 0 0 1 5.06-6.94" />
-     <path d="M1 1l22 22" />
-     <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88" />
-     <path d="M14.12 14.12L9.88 9.88" />
-   </svg>
- );
+  const EyeClosed = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Eye shape */}
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-10-7-10-7a21.77 21.77 0 0 1 5.06-6.94" />
+      <path d="M1 1l22 22" />
+      <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88" />
+      <path d="M14.12 14.12L9.88 9.88" />
+    </svg>
+  );
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  if (name === "phone") {
-    // Remove non-digits
-    let cleanedValue = value.replace(/\D/g, "");
+    if (name === "phone") {
+      // Remove non-digits
+      let cleanedValue = value.replace(/\D/g, "");
 
-    // If first digit exists and is not 6-9 → remove it
-    if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
-      cleanedValue = "";
+      // If first digit exists and is not 6-9 → remove it
+      if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
+        cleanedValue = "";
+      }
+
+      // If more than 1 digit and first digit invalid → fix it
+      if (cleanedValue.length > 1 && !/^[6-9]/.test(cleanedValue)) {
+        cleanedValue = cleanedValue.slice(1);
+      }
+
+      // Limit to 10 digits
+      const truncatedValue = cleanedValue.slice(0, 10);
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: truncatedValue,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
 
-    // If more than 1 digit and first digit invalid → fix it
-    if (cleanedValue.length > 1 && !/^[6-9]/.test(cleanedValue)) {
-      cleanedValue = cleanedValue.slice(1);
+    // Clear error when typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
-
-    // Limit to 10 digits
-    const truncatedValue = cleanedValue.slice(0, 10);
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: truncatedValue,
-    }));
-  } else {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
-
-  // Clear error when typing
-  if (errors[name]) {
-    setErrors((prev) => ({
-      ...prev,
-      [name]: "",
-    }));
-  }
-};
+  };
 
   // Handle phone input blur for additional validation
   const handlePhoneBlur = () => {
@@ -97,13 +97,13 @@ const handleChange = (e) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Username validation
+    // UserName validation
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = "UserName is required";
     } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
+      newErrors.username = "UserName must be at least 3 characters";
     } else if (formData.username.length > 30) {
-      newErrors.username = "Username cannot exceed 30 characters";
+      newErrors.username = "UserName cannot exceed 30 characters";
     }
 
     // Phone validation - strict 10 digits
@@ -166,20 +166,8 @@ const handleChange = (e) => {
         navigate("/login");
       }
     } catch (error) {
-      console.error("Registration failed:", error);
-
-      // Handle specific error messages from server
       const errorMessage = error.response?.data?.message;
-
-      if (errorMessage?.includes("username")) {
-        setErrors({ username: "Username already taken" });
-      } else if (errorMessage?.includes("phone")) {
-        setErrors({ phone: "Phone number already registered" });
-      } else {
-        setErrors({
-          form: errorMessage || "Registration failed. Please try again.",
-        });
-      }
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -195,7 +183,7 @@ const handleChange = (e) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Join SweetJoy</h1>
+        <h1>Join Deep Bakes</h1>
         {/* <p className="auth-subtitle">Create your account to start ordering</p> */}
 
         {errors.form && (
@@ -207,7 +195,7 @@ const handleChange = (e) => {
         <form onSubmit={handleSubmit} className="auth-form" noValidate>
           <div className="form-group">
             <label htmlFor="username">
-              Username <span className="required">*</span>
+              UserName <span className="required">*</span>
             </label>
             <input
               type="text"

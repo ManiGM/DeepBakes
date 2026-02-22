@@ -20,12 +20,17 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
-  const tax = subtotal * 0.1; 
-  const deliveryFee = subtotal > 500 ? 0 : 50; 
+  const tax = subtotal * 0.05;
+  const deliveryFee = subtotal > 500 ? 0 : 50;
   const total = subtotal + tax + deliveryFee;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "phone") {
+      if (!/^\d*$/.test(value)) return;
+      if (value.length > 10) return;
+      if (value.length === 1 && !/[6-9]/.test(value)) return;
+    }
     setShippingDetails((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -34,7 +39,6 @@ const Cart = () => {
       toast.error("Please fill in all shipping details");
       return;
     }
-
     try {
       setLoading(true);
       const orderData = {
@@ -57,7 +61,8 @@ const Cart = () => {
       await orderApi.create(orderData);
       toast.success("Order placed successfully! 🎂");
       clearCart();
-      navigate("/my-orders");
+      navigate("/my-orders", { state: orderData });
+      // navigate("/my-orders");
     } catch (error) {
       console.error("Order failed:", error);
     } finally {
@@ -80,7 +85,6 @@ const Cart = () => {
   return (
     <div className="cart-page">
       <h1>Your Sweet Cart</h1>
-
       <div className="cart-container">
         <div className="cart-items">
           {cart.map((item) => (
@@ -90,7 +94,6 @@ const Cart = () => {
                 alt={item.name}
                 className="cart-item-image"
               />
-
               <div className="cart-item-details">
                 <h3>{item.name}</h3>
                 <p className="cart-item-price">
@@ -98,7 +101,6 @@ const Cart = () => {
                   {item.price.toFixed(2)}
                 </p>
               </div>
-
               <div className="cart-item-quantity">
                 <button
                   className="qty-btn"
@@ -115,7 +117,6 @@ const Cart = () => {
                   +
                 </button>
               </div>
-
               <div className="cart-item-total">
                 <span>&#8377;</span>
                 {(item.price * item.quantity).toFixed(2)}
@@ -130,10 +131,8 @@ const Cart = () => {
             </div>
           ))}
         </div>
-
         <div className="cart-summary">
           <h2>Order Summary</h2>
-
           <div className="summary-row">
             <span>Subtotal</span>
             <span>
@@ -142,7 +141,7 @@ const Cart = () => {
             </span>
           </div>
           <div className="summary-row">
-            <span>Tax (10%)</span>
+            <span>Tax (5%)</span>
             <span>
               <span>&#8377;</span>
               {tax.toFixed(2)}
@@ -162,10 +161,8 @@ const Cart = () => {
               {total.toFixed(2)}
             </span>
           </div>
-
           <div className="shipping-form">
             <h3>Shipping Details</h3>
-
             <input
               type="text"
               name="name"
@@ -174,7 +171,6 @@ const Cart = () => {
               onChange={handleInputChange}
               className="form-input"
             />
-
             <input
               type="tel"
               name="phone"
@@ -182,8 +178,9 @@ const Cart = () => {
               value={shippingDetails.phone}
               onChange={handleInputChange}
               className="form-input"
+              pattern="[6-9]{1}[0-9]{9}"
+              maxLength={10}
             />
-
             <textarea
               name="address"
               placeholder="Delivery Address"
@@ -192,7 +189,6 @@ const Cart = () => {
               rows="3"
               className="form-input"
             />
-
             <button
               className="btn btn-primary btn-block"
               onClick={handlePlaceOrder}
@@ -203,7 +199,7 @@ const Cart = () => {
           </div>
 
           <p className="cart-quote">
-            "A party without cake is just a meeting." — Julia Child
+            "A party without sweet is just a meeting." — Julia Child
           </p>
         </div>
       </div>

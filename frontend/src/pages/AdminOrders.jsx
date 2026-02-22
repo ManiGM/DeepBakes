@@ -52,7 +52,7 @@ const AdminOrders = () => {
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
       await orderApi.updateStatus(orderId, newStatus);
-      toast.success(`Order ${newStatus.toLowerCase()}!`);
+      toast.success(`Order  ₹{newStatus.toLowerCase()}!`);
 
       // Update local state
       setOrders((prevOrders) =>
@@ -129,38 +129,38 @@ const AdminOrders = () => {
         </div>
         <div className="stat-card revenue">
           <span className="stat-label">Revenue</span>
-          <span className="stat-value">${stats.revenue.toFixed(2)}</span>
+          <span className="stat-value"> ₹{stats.revenue.toFixed(2)}</span>
         </div>
       </div>
 
       {/* Filters */}
       <div className="filters-bar">
         <button
-          className={`filter-btn ${filter === "all" ? "active" : ""}`}
+          className={`filter-btn  ₹{filter === "all" ? "active" : ""}`}
           onClick={() => setFilter("all")}
         >
           All Orders
         </button>
         <button
-          className={`filter-btn ${filter === "pending" ? "active" : ""}`}
+          className={`filter-btn  ₹{filter === "pending" ? "active" : ""}`}
           onClick={() => setFilter("pending")}
         >
           Pending
         </button>
         <button
-          className={`filter-btn ${filter === "accepted" ? "active" : ""}`}
+          className={`filter-btn  ₹{filter === "accepted" ? "active" : ""}`}
           onClick={() => setFilter("accepted")}
         >
           Accepted
         </button>
         <button
-          className={`filter-btn ${filter === "delivered" ? "active" : ""}`}
+          className={`filter-btn  ₹{filter === "delivered" ? "active" : ""}`}
           onClick={() => setFilter("delivered")}
         >
           Delivered
         </button>
         <button
-          className={`filter-btn ${filter === "rejected" ? "active" : ""}`}
+          className={`filter-btn  ₹{filter === "rejected" ? "active" : ""}`}
           onClick={() => setFilter("rejected")}
         >
           Rejected
@@ -186,7 +186,7 @@ const AdminOrders = () => {
                   </span>
                 </div>
                 <span className="order-date">
-                  {formatDate(order.createdAt)}
+                  {/* {formatDate(order.createdAt)} */}
                 </span>
               </div>
 
@@ -210,32 +210,51 @@ const AdminOrders = () => {
                     <div key={index} className="order-item">
                       <span>{item.name}</span>
                       <span>x{item.quantity}</span>
-                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <span> ₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
-
                 <div className="order-total">
-                  <div className="total-row">
-                    <span>Subtotal:</span>
-                    <span>${order.subtotal?.toFixed(2) || "0.00"}</span>
-                  </div>
-                  <div className="total-row">
-                    <span>Tax (10%):</span>
-                    <span>${order.tax?.toFixed(2) || "0.00"}</span>
-                  </div>
-                  <div className="total-row">
-                    <span>Delivery:</span>
-                    <span>
-                      {order.deliveryFee === 0
-                        ? "Free"
-                        : `$${order.deliveryFee?.toFixed(2)}`}
-                    </span>
-                  </div>
-                  <div className="total-row grand-total">
-                    <span>Total:</span>
-                    <span>${order.total?.toFixed(2) || "0.00"}</span>
-                  </div>
+                  {(() => {
+                    const items = Array.isArray(order.items) ? order.items : [];
+
+                    const subtotal = items.reduce((sum, item) => {
+                      const price = Number(item.price) || 0;
+                      const qty = Number(item.qty ?? item.quantity) || 0;
+                      return sum + price * qty;
+                    }, 0);
+
+                    const tax = subtotal * 0.05;
+                    const deliveryFee = subtotal > 500 ? 0 : 50;
+
+                    return (
+                      <>
+                        <div className="total-row">
+                          <span>Subtotal:</span>
+                          <span> ₹{subtotal.toFixed(2)}</span>
+                        </div>
+
+                        <div className="total-row">
+                          <span>Tax (5%):</span>
+                          <span> ₹{tax.toFixed(2)}</span>
+                        </div>
+
+                        <div className="total-row">
+                          <span>Delivery:</span>
+                          <span>
+                            {deliveryFee === 0
+                              ? "Free"
+                              : `₹${deliveryFee.toFixed(2)}`}
+                          </span>
+                        </div>
+
+                        <div className="total-row grand-total">
+                          <span>Total:</span>
+                          <span> ₹{Number(order.total || 0).toFixed(2)}</span>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 
@@ -267,7 +286,7 @@ const AdminOrders = () => {
                   </button>
                 )}
 
-                {(order.status === "Delivered" ||
+                {/* {(order.status === "Delivered" ||
                   order.status === "Rejected") && (
                   <button
                     className="btn btn-view"
@@ -275,7 +294,7 @@ const AdminOrders = () => {
                   >
                     View Details
                   </button>
-                )}
+                )} */}
               </div>
             </div>
           ))

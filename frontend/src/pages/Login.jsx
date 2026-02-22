@@ -26,7 +26,7 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
+      newErrors.username = "UserName is required";
     }
     if (!formData.password) {
       newErrors.password = "Password is required";
@@ -67,7 +67,9 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">
+              UserName<span className="required">*</span>
+            </label>
             <input
               type="text"
               id="username"
@@ -84,7 +86,9 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">
+              Password<span className="required">*</span>
+            </label>
             <input
               type="password"
               id="password"

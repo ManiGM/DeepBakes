@@ -8,7 +8,7 @@ const MyOrders = () => {
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all"); // all, pending, accepted, delivered, rejected
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     if (user?.id) {
@@ -75,7 +75,7 @@ const MyOrders = () => {
     <div className="my-orders-page">
       <div className="orders-header">
         <h1>My Orders</h1>
-        <p>Track and manage your bakery orders</p>
+        {/* <p>Track and manage your bakery orders</p> */}
       </div>
 
       {orders.length === 0 ? (
@@ -142,9 +142,9 @@ const MyOrders = () => {
                         {order.status}
                       </span>
                     </div>
-                    <span className="order-date">
+                    {/* <span className="order-date">
                       {formatDate(order.createdAt)}
-                    </span>
+                    </span> */}
                   </div>
 
                   <div className="order-body">
@@ -157,33 +157,52 @@ const MyOrders = () => {
                             x{item.quantity}
                           </span>
                           <span className="item-price">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            ₹{(item.price * item.quantity).toFixed(2)}
                           </span>
                         </div>
                       ))}
                     </div>
-
                     <div className="order-summary">
-                      <div className="summary-row">
-                        <span>Subtotal:</span>
-                        <span>${order.subtotal?.toFixed(2) || "0.00"}</span>
-                      </div>
-                      <div className="summary-row">
-                        <span>Tax (10%):</span>
-                        <span>${order.tax?.toFixed(2) || "0.00"}</span>
-                      </div>
-                      <div className="summary-row">
-                        <span>Delivery:</span>
-                        <span>
-                          {order.deliveryFee === 0
-                            ? "Free"
-                            : `$${order.deliveryFee?.toFixed(2)}`}
-                        </span>
-                      </div>
-                      <div className="summary-row total">
-                        <span>Total:</span>
-                        <span>${order.total?.toFixed(2) || "0.00"}</span>
-                      </div>
+                      {(() => {
+                        const subtotal =
+                          order.subtotal ??
+                          order.items.reduce(
+                            (sum, item) => sum + item.price * item.quantity,
+                            0,
+                          );
+
+                        const tax = order.tax ?? subtotal * 0.05;
+                        const deliveryFee =
+                          order.deliveryFee ?? (subtotal > 500 ? 0 : 50);
+
+                        return (
+                          <>
+                            <div className="summary-row">
+                              <span>Subtotal:</span>
+                              <span>₹{subtotal.toFixed(2)}</span>
+                            </div>
+
+                            <div className="summary-row">
+                              <span>Tax (5%):</span>
+                              <span>₹{tax.toFixed(2)}</span>
+                            </div>
+
+                            <div className="summary-row">
+                              <span>Delivery:</span>
+                              <span>
+                                {deliveryFee === 0
+                                  ? "Free"
+                                  : `₹${deliveryFee.toFixed(2)}`}
+                              </span>
+                            </div>
+
+                            <div className="summary-row total">
+                              <span>Total:</span>
+                              <span>₹{order.total?.toFixed(2)}</span>
+                            </div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
 
@@ -210,7 +229,7 @@ const MyOrders = () => {
                     )}
                     {order.status === "Delivered" && (
                       <div className="order-message delivered">
-                        ✅ Order delivered! Thank you for choosing SweetJoy
+                        ✅ Order delivered! Thank you for choosing Deep Bakes
                       </div>
                     )}
                     {order.status === "Rejected" && (
