@@ -98,7 +98,7 @@ const Cart = () => {
                 <h3>{item.name}</h3>
                 <p className="cart-item-price">
                   <span>&#8377;</span>
-                  {item.price.toFixed(2)}
+                  {Number(item.price || 0).toFixed(2)}
                 </p>
               </div>
               <div className="cart-item-quantity">

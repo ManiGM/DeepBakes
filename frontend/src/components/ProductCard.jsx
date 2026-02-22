@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
         <p className="product-description">{product.description}</p>
         <div className="product-price">
           <span>&#8377;</span>
-          {product.price.toFixed(2)}
+          {Number(product.price || 0).toFixed(2)}
         </div>
 
         {!isAdmin && (

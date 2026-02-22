@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Forms.css";
+import CryptoJS from "crypto-js";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -144,20 +145,14 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     try {
       setLoading(true);
       const { confirmPassword, ...userData } = formData;
-
-      // Ensure phone is stored as string of digits
       userData.phone = formData.phone;
-
       const response = await authApi.register(userData);
-
       if (response.data?.success) {
         toast.success("Registration successful! Please login.");
         navigate("/login");

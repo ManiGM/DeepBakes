@@ -9,7 +9,8 @@ const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
-const PORT = 2213;
+// const PORT = 2213;
+const PORT = process.env.PORT || 2213;
 const SECRET = "secret123";
 
 // const DATA_DIR = path.join(__dirname, "data");

@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "_id": "1771786241288",
+    "userId": "1771786035026",
+    "userName": "manideep",
+    "phone": "9898989898",
+    "address": "hyderabad",
+    "items": [
+      {
+        "productId": "1771785985342",
+        "name": "biryani",
+        "price": "199",
+        "quantity": 2
+      }
+    ],
+    "subtotal": 398,
+    "tax": 19.900000000000002,
+    "deliveryFee": 50,
+    "total": 467.9,
+    "status": "Delivered",
+    "createdAt": "2026-02-22T18:50:41.288Z"
+  }
+]

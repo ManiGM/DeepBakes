@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { orderApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Admin.css";
+import CryptoJS from "crypto-js";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all"); // all, pending, accepted, delivered, rejected
+  const [filter, setFilter] = useState("all");
   const [stats, setStats] = useState({
     total: 0,
     pending: 0,
@@ -52,9 +53,7 @@ const AdminOrders = () => {
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
       await orderApi.updateStatus(orderId, newStatus);
-      toast.success(`Order  ₹{newStatus.toLowerCase()}!`);
-
-      // Update local state
+      toast.success(`Order  ${newStatus}`);
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === orderId ? { ...order, status: newStatus } : order,
@@ -305,3 +304,8 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
+
+// let SECRET_KEY_URL = "mySuperSecretKey123!@#";
+// export const encryptPassword = (password) => {
+//   return CryptoJS.AES.encrypt(password, SECRET_KEY_URL).toString();
+// };

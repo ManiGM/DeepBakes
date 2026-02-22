@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "_id": "1771785860838",
+    "name": "sdbcbcsdbcdsa",
+    "price": "0.01",
+    "description": "bdsjsdb",
+    "category": "cookie",
+    "inStock": "true",
+    "image": {},
+    "createdAt": "2026-02-22T18:44:20.838Z"
+  },
+  {
+    "_id": "1771785985342",
+    "name": "biryani",
+    "price": "199",
+    "description": "good",
+    "category": "cupcake",
+    "inStock": "true",
+    "image": {},
+    "createdAt": "2026-02-22T18:46:25.342Z"
+  }
+]
