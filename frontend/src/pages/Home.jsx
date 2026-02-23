@@ -6,7 +6,6 @@ import cookies from "../assets/cookies.jpg";
 import malaiToast from "../assets/MalaiToast.jpg";
 
 const Home = () => {
-
   const testimonials = [
     {
       id: 1,
@@ -38,7 +37,10 @@ const Home = () => {
       <section className="hero-section1">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <span className="hero-badge">Deep Bakes</span>
+          <span className="hero-badge">
+            Deep Bakes
+            <span className="tagline"> Flavour of Purity, Taste of Home</span>
+          </span>
           <h1 className="hero-title">
             Artisanal Bakes for
             <span className="highlight"> Every Occasion</span>

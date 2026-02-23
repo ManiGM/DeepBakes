@@ -50,14 +50,14 @@ const MyOrders = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const formatDate = (dateInput) => {
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    if (isNaN(date.getTime())) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   if (loading) {
@@ -137,9 +137,9 @@ const MyOrders = () => {
                         {order.status}
                       </span>
                     </div>
-                    {/* <span className="order-date">
-                      {formatDate(order.createdAt)}
-                    </span> */}
+                    <span className="order-date">
+                      Ordered On - {formatDate(order.createdAt)}
+                    </span>
                   </div>
                   <div className="order-body">
                     <div className="order-items">

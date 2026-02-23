@@ -67,6 +67,11 @@
   margin-bottom: 20px;
 }
 
+.tagline {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
 .highlight {
   color: #f8b4b4;
   display: block;
@@ -1163,5 +1168,3 @@
   transform: translateY(-2px);
   box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
 }
-
-
