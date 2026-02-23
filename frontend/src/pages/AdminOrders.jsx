@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { orderApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Admin.css";
-import CryptoJS from "crypto-js";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -87,16 +86,6 @@ const AdminOrders = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   if (loading) {
     return <div className="loading">Loading orders...</div>;
   }
@@ -107,8 +96,6 @@ const AdminOrders = () => {
         <h1>Manage Orders</h1>
         <p>Track and update customer orders</p>
       </div>
-
-      {/* Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card">
           <span className="stat-label">Total Orders</span>
@@ -131,8 +118,6 @@ const AdminOrders = () => {
           <span className="stat-value"> ₹{stats.revenue.toFixed(2)}</span>
         </div>
       </div>
-
-      {/* Filters */}
       <div className="filters-bar">
         <button
           className={`filter-btn  ₹{filter === "all" ? "active" : ""}`}
@@ -165,8 +150,6 @@ const AdminOrders = () => {
           Rejected
         </button>
       </div>
-
-      {/* Orders List */}
       <div className="orders-container">
         {getFilteredOrders().length === 0 ? (
           <div className="no-orders">
@@ -188,7 +171,6 @@ const AdminOrders = () => {
                   {/* {formatDate(order.createdAt)} */}
                 </span>
               </div>
-
               <div className="order-details">
                 <div className="customer-info">
                   <h4>Customer Details</h4>
@@ -202,7 +184,6 @@ const AdminOrders = () => {
                     <strong>Address:</strong> {order.address}
                   </p>
                 </div>
-
                 <div className="order-items">
                   <h4>Order Items</h4>
                   {order.items.map((item, index) => (
@@ -216,28 +197,23 @@ const AdminOrders = () => {
                 <div className="order-total">
                   {(() => {
                     const items = Array.isArray(order.items) ? order.items : [];
-
                     const subtotal = items.reduce((sum, item) => {
                       const price = Number(item.price) || 0;
                       const qty = Number(item.qty ?? item.quantity) || 0;
                       return sum + price * qty;
                     }, 0);
-
                     const tax = subtotal * 0.05;
                     const deliveryFee = subtotal > 500 ? 0 : 50;
-
                     return (
                       <>
                         <div className="total-row">
                           <span>Subtotal:</span>
                           <span> ₹{subtotal.toFixed(2)}</span>
                         </div>
-
                         <div className="total-row">
                           <span>Tax (5%):</span>
                           <span> ₹{tax.toFixed(2)}</span>
                         </div>
-
                         <div className="total-row">
                           <span>Delivery:</span>
                           <span>
@@ -246,7 +222,6 @@ const AdminOrders = () => {
                               : `₹${deliveryFee.toFixed(2)}`}
                           </span>
                         </div>
-
                         <div className="total-row grand-total">
                           <span>Total:</span>
                           <span> ₹{Number(order.total || 0).toFixed(2)}</span>
@@ -256,8 +231,6 @@ const AdminOrders = () => {
                   })()}
                 </div>
               </div>
-
-              {/* Action Buttons */}
               <div className="order-actions">
                 {order.status === "Pending" && (
                   <>
@@ -275,7 +248,6 @@ const AdminOrders = () => {
                     </button>
                   </>
                 )}
-
                 {order.status === "Accepted" && (
                   <button
                     className="btn btn-deliver"
@@ -284,16 +256,6 @@ const AdminOrders = () => {
                     Mark as Delivered
                   </button>
                 )}
-
-                {/* {(order.status === "Delivered" ||
-                  order.status === "Rejected") && (
-                  <button
-                    className="btn btn-view"
-                    onClick={() => window.print()} // Simple print functionality
-                  >
-                    View Details
-                  </button>
-                )} */}
               </div>
             </div>
           ))
@@ -304,8 +266,3 @@ const AdminOrders = () => {
 };
 
 export default AdminOrders;
-
-// let SECRET_KEY_URL = "mySuperSecretKey123!@#";
-// export const encryptPassword = (password) => {
-//   return CryptoJS.AES.encrypt(password, SECRET_KEY_URL).toString();
-// };

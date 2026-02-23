@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { authApi } from "../services/api";
@@ -17,7 +17,6 @@ const Login = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -37,16 +36,14 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       return;
     }
-
     try {
       setLoading(true);
       const response = await authApi.login(formData);
       login(response.data);
-      navigate("/"); // Navigate after successful login
+      navigate("/"); 
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
@@ -62,9 +59,7 @@ const Login = () => {
       <div className="auth-card">
         <h1>Welcome Back!</h1>
         <p className="auth-subtitle">Login to satisfy your sweet cravings</p>
-
         {errors.form && <div className="error-message">{errors.form}</div>}
-
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label htmlFor="username">
@@ -84,7 +79,6 @@ const Login = () => {
               <span className="field-error">{errors.username}</span>
             )}
           </div>
-
           <div className="form-group">
             <label htmlFor="password">
               Password<span className="required">*</span>
@@ -103,7 +97,6 @@ const Login = () => {
               <span className="field-error">{errors.password}</span>
             )}
           </div>
-
           <button
             type="submit"
             className="btn btn-primary btn-block1"
@@ -112,7 +105,6 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
         <p className="auth-footer">
           Don't have an account? <Link to="/register">Register here</Link>
         </p>

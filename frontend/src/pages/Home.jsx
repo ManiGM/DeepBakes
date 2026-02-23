@@ -1,47 +1,11 @@
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import plumcake from "../assets/plumcake.jpg";
-import plumCake2 from "../assets/plumcake2.png";
-import plumCake4 from "../assets/plumcake4.png";
 import plumCake3 from "../assets/plumcake3.png";
 import cookies from "../assets/cookies.jpg";
 import malaiToast from "../assets/MalaiToast.jpg";
 
 const Home = () => {
-  const featuredCakes = [
-    {
-      id: 1,
-      name: "Classic Plum Cake",
-      description: "Rich, moist plum cake with premium dry fruits",
-      price: "$34.99",
-      image: plumcake,
-      badge: "Bestseller",
-    },
-    {
-      id: 2,
-      name: "Belgian Chocolate Cake",
-      description: "Decadent chocolate layers with ganache",
-      price: "$39.99",
-      image: plumCake2,
-      badge: "New",
-    },
-    {
-      id: 3,
-      name: "Mixed Fruit Cake",
-      description: "Fresh fruits and cream in every bite",
-      price: "$29.99",
-      image: plumCake3,
-      badge: "Seasonal",
-    },
-    {
-      id: 4,
-      name: "Red Velvet Cake",
-      description: "Classic red velvet with cream cheese frosting",
-      price: "$37.99",
-      image: plumCake4,
-      badge: "Popular",
-    },
-  ];
 
   const testimonials = [
     {
@@ -98,7 +62,6 @@ const Home = () => {
           />
         </div>
       </section>
-
       <section className="categories-section">
         <div className="section-header">
           <span className="section-subtitle"></span>
@@ -135,7 +98,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
       <section className="features-section">
         <div className="feature">
           <div className="feature-icon-wrapper">
@@ -166,7 +128,6 @@ const Home = () => {
           <p>Personalized cakes for your special occasions</p>
         </div>
       </section>
-
       <section className="testimonials-section">
         <div className="section-header">
           <span className="section-subtitle">What Our Customers Say</span>
@@ -194,7 +155,6 @@ const Home = () => {
           ))}
         </div>
       </section>
-
       <section className="gallery-section">
         <div className="section-header">
           <span className="section-subtitle">Contact Us On</span>
@@ -229,7 +189,6 @@ const Home = () => {
                 </a>
               </div>
             </div>
-
             <div className="contact-item">
               <div className="contact-icon instagram-icon">
                 <svg
@@ -260,7 +219,6 @@ const Home = () => {
                 </a>
               </div>
             </div>
-
             <div className="contact-item">
               <div className="contact-icon location-icon">
                 <svg

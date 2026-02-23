@@ -1,4 +1,3 @@
-import React from "react";
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Shop.css";
 
@@ -20,7 +19,6 @@ const ProductCard = ({ product }) => {
       <div className="product-image">
         <img src={product.image} alt={product.name} loading="lazy" />
       </div>
-
       <div className="product-details">
         <h3 className="product-name">{product.name}</h3>
         <p className="product-description">{product.description}</p>
@@ -28,7 +26,6 @@ const ProductCard = ({ product }) => {
           <span>&#8377;</span>
           {Number(product.price || 0).toFixed(2)}
         </div>
-
         {!isAdmin && (
           <div className="product-actions">
             {!cartItem ? (

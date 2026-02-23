@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { orderApi } from "../services/api";
@@ -57,19 +57,16 @@ const Cart = () => {
         deliveryFee,
         total,
       };
-
       await orderApi.create(orderData);
       toast.success("Order placed successfully! 🎂");
       clearCart();
       navigate("/my-orders", { state: orderData });
-      // navigate("/my-orders");
     } catch (error) {
       console.error("Order failed:", error);
     } finally {
       setLoading(false);
     }
   };
-
   if (cart.length === 0) {
     return (
       <div className="empty-cart">
@@ -81,7 +78,6 @@ const Cart = () => {
       </div>
     );
   }
-
   return (
     <div className="cart-page">
       <h1>Your Sweet Cart</h1>
@@ -121,7 +117,6 @@ const Cart = () => {
                 <span>&#8377;</span>
                 {(item.price * item.quantity).toFixed(2)}
               </div>
-
               <button
                 className="remove-btn"
                 onClick={() => removeFromCart(item._id)}
@@ -197,7 +192,6 @@ const Cart = () => {
               {loading ? "Processing..." : "Place Order"}
             </button>
           </div>
-
           <p className="cart-quote">
             "A party without sweet is just a meeting." — Julia Child
           </p>

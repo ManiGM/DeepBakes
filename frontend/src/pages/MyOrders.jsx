@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../Context/AuthContext";
 import { orderApi } from "../services/api";
 import { Link } from "react-router-dom";
@@ -75,9 +75,7 @@ const MyOrders = () => {
     <div className="my-orders-page">
       <div className="orders-header">
         <h1>My Orders</h1>
-        {/* <p>Track and manage your bakery orders</p> */}
       </div>
-
       {orders.length === 0 ? (
         <div className="no-orders">
           <div className="no-orders-icon">🍰</div>
@@ -89,7 +87,6 @@ const MyOrders = () => {
         </div>
       ) : (
         <>
-          {/* Filter buttons */}
           <div className="order-filters">
             <button
               className={`filter-btn ${filter === "all" ? "active" : ""}`}
@@ -123,8 +120,6 @@ const MyOrders = () => {
               Rejected ({orders.filter((o) => o.status === "Rejected").length})
             </button>
           </div>
-
-          {/* Orders list */}
           <div className="orders-container">
             {filteredOrders.length === 0 ? (
               <div className="no-filtered-orders">
@@ -146,7 +141,6 @@ const MyOrders = () => {
                       {formatDate(order.createdAt)}
                     </span> */}
                   </div>
-
                   <div className="order-body">
                     <div className="order-items">
                       <h4>Items</h4>
@@ -170,23 +164,19 @@ const MyOrders = () => {
                             (sum, item) => sum + item.price * item.quantity,
                             0,
                           );
-
                         const tax = order.tax ?? subtotal * 0.05;
                         const deliveryFee =
                           order.deliveryFee ?? (subtotal > 500 ? 0 : 50);
-
                         return (
                           <>
                             <div className="summary-row">
                               <span>Subtotal:</span>
                               <span>₹{subtotal.toFixed(2)}</span>
                             </div>
-
                             <div className="summary-row">
                               <span>Tax (5%):</span>
                               <span>₹{tax.toFixed(2)}</span>
                             </div>
-
                             <div className="summary-row">
                               <span>Delivery:</span>
                               <span>
@@ -195,7 +185,6 @@ const MyOrders = () => {
                                   : `₹${deliveryFee.toFixed(2)}`}
                               </span>
                             </div>
-
                             <div className="summary-row total">
                               <span>Total:</span>
                               <span>₹{order.total?.toFixed(2)}</span>
@@ -205,7 +194,6 @@ const MyOrders = () => {
                       })()}
                     </div>
                   </div>
-
                   <div className="order-footer">
                     <div className="delivery-details">
                       <p>
@@ -215,7 +203,6 @@ const MyOrders = () => {
                         <strong>Phone:</strong> {order.phone}
                       </p>
                     </div>
-
                     {order.status === "Pending" && (
                       <div className="order-message">
                         ⏳ Your order is being reviewed by our bakery team

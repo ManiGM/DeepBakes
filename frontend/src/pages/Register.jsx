@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Forms.css";
-import CryptoJS from "crypto-js";
 import login_bg from "../assets/login_bg.jpg"
 
 const Register = () => {
@@ -38,33 +37,22 @@ const Register = () => {
      strokeLinecap="round"
      strokeLinejoin="round"
    >
-     {/* Main eye shape */}
      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
-     {/* Slash/strikethrough */}
      <line x1="2" y1="2" x2="22" y2="22" />
    </svg>
  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "phone") {
-      // Remove non-digits
       let cleanedValue = value.replace(/\D/g, "");
-
-      // If first digit exists and is not 6-9 → remove it
-      if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
+     if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
         cleanedValue = "";
       }
-
-      // If more than 1 digit and first digit invalid → fix it
       if (cleanedValue.length > 1 && !/^[6-9]/.test(cleanedValue)) {
         cleanedValue = cleanedValue.slice(1);
       }
-
-      // Limit to 10 digits
       const truncatedValue = cleanedValue.slice(0, 10);
-
       setFormData((prev) => ({
         ...prev,
         [name]: truncatedValue,
@@ -75,8 +63,6 @@ const Register = () => {
         [name]: value,
       }));
     }
-
-    // Clear error when typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -85,7 +71,6 @@ const Register = () => {
     }
   };
 
-  // Handle phone input blur for additional validation
   const handlePhoneBlur = () => {
     if (formData.phone && formData.phone.length < 10) {
       setErrors((prev) => ({
@@ -97,8 +82,6 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    // UserName validation
     if (!formData.username.trim()) {
       newErrors.username = "UserName is required";
     } else if (formData.username.length < 3) {
@@ -106,14 +89,11 @@ const Register = () => {
     } else if (formData.username.length > 30) {
       newErrors.username = "UserName cannot exceed 30 characters";
     }
-
-    // Phone validation - strict 10 digits
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required";
     } else if (!/^\d{10}$/.test(formData.phone)) {
       newErrors.phone = "Phone number must be exactly 10 digits (numbers only)";
     } else {
-      // Additional check to ensure it's a valid Indian phone number format (optional)
       const firstDigit = formData.phone.charAt(0);
       if (firstDigit === "0") {
         newErrors.phone = "Phone number cannot start with 0";
@@ -121,8 +101,6 @@ const Register = () => {
         newErrors.phone = "Phone number cannot start with 1";
       }
     }
-
-    // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
@@ -133,12 +111,9 @@ const Register = () => {
       newErrors.password =
         "Password must contain at least one uppercase letter, one lowercase letter, and one number";
     }
-
-    // Confirm password validation
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords don't match";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -168,10 +143,8 @@ const Register = () => {
     }
   };
 
-  // Helper function to format phone number for display (optional)
   const formatPhoneDisplay = (phone) => {
     if (!phone) return "";
-    // Format as XXX-XXX-XXXX for better readability
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   };
 
@@ -179,14 +152,11 @@ const Register = () => {
     <div className="auth-container"  style={{ backgroundImage: `url(${login_bg})` }}>
       <div className="auth-card">
         <h1>Join Deep Bakes</h1>
-        {/* <p className="auth-subtitle">Create your account to start ordering</p> */}
-
         {errors.form && (
           <div className="error-message" role="alert">
             {errors.form}
           </div>
         )}
-
         <form onSubmit={handleSubmit} className="auth-form" noValidate>
           <div className="form-group">
             <label htmlFor="username">
@@ -210,7 +180,6 @@ const Register = () => {
               </span>
             )}
           </div>
-
           <div className="form-group">
             <label htmlFor="phone">
               Phone Number <span className="required">*</span>
@@ -243,12 +212,10 @@ const Register = () => {
               </span>
             )}
           </div>
-
           <div className="form-group">
             <label htmlFor="password">
               Password <span className="required">*</span>
             </label>
-
             <div className="password-wrapper">
               <input
                 type={showPassword ? "text" : "password"}
@@ -261,7 +228,6 @@ const Register = () => {
                 disabled={loading}
                 autoComplete="new-password"
               />
-
               <span
                 className="eye-icon"
                 onClick={() => setShowPassword((prev) => !prev)}
@@ -269,19 +235,16 @@ const Register = () => {
                 {showPassword ? <EyeClosed /> : <EyeOpen />}
               </span>
             </div>
-
             {errors.password && (
               <span className="field-error" role="alert">
                 {errors.password}
               </span>
             )}
           </div>
-
           <div className="form-group">
             <label htmlFor="confirmPassword">
               Confirm Password <span className="required">*</span>
             </label>
-
             <div className="password-wrapper">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -294,7 +257,6 @@ const Register = () => {
                 disabled={loading}
                 autoComplete="new-password"
               />
-
               <span
                 className="eye-icon"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
@@ -302,14 +264,12 @@ const Register = () => {
                 {showConfirmPassword ? <EyeClosed /> : <EyeOpen />}
               </span>
             </div>
-
             {errors.confirmPassword && (
               <span className="field-error" role="alert">
                 {errors.confirmPassword}
               </span>
             )}
           </div>
-
           <button
             type="submit"
             className="btn btn-primary btn-block1"
@@ -325,7 +285,6 @@ const Register = () => {
             )}
           </button>
         </form>
-
         <p className="auth-footer">
           Already have an account? <Link to="/login">Login here</Link>
         </p>

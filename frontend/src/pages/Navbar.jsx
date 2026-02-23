@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
@@ -7,7 +6,6 @@ import  logo  from "../assets/logo.jpg"
 
 const Navbar = () => {
   const { user, cart, logout, isAdmin, isAuthenticated } = useAuth();
-
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -17,7 +15,6 @@ const Navbar = () => {
           <img src={logo} style={{width:"90px",height:"70px",borderRadius:"12px"}} />
         </Link>
       </div>
-
       <div className="nav-links">
         <Link to="/shop" className="nav-link">
           Shop
@@ -38,7 +35,6 @@ const Navbar = () => {
           </Link>
         )}
       </div>
-
       <div className="nav-actions">
         {isAuthenticated ? (
           <>

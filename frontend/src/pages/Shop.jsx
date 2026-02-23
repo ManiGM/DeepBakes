@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { productApi } from "../services/api";
 import ProductCard from "../components/ProductCard";
 import "../styles/Shop.css";
@@ -51,7 +51,6 @@ const Shop = () => {
           />
         </div>
       </div>
-
       {filteredProducts.length === 0 ? (
         <div className="no-products">
           <p>No products found matching your search.</p>

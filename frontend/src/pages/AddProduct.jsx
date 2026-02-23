@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { productApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/AddProduct.css";
+
 const AddProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     description: "",
     image: "",
-    category: "cake", 
+    category: "cake",
     inStock: true,
   });
   const [imagePreview, setImagePreview] = useState(null);
@@ -27,30 +28,27 @@ const AddProduct = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     if (!file.type.startsWith("image/")) {
       toast.error("Please upload an image file");
       return;
     }
-
     if (file.size > 5 * 1024 * 1024) {
       toast.error("Image must be under 5MB");
       return;
     }
-
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
       setFormData((prev) => ({
         ...prev,
-        image: reader.result, // base64 stored here
+        image: reader.result,
       }));
     };
     reader.readAsDataURL(file);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (
       !formData.name ||
       !formData.price ||
@@ -60,23 +58,18 @@ const AddProduct = () => {
       toast.error("Please fill all fields");
       return;
     }
-
     if (formData.price <= 0) {
       toast.error("Price must be greater than 0");
       return;
     }
-
     try {
       setLoading(true);
-
       await productApi.create({
         name: formData.name,
         price: Number(formData.price),
         description: formData.description,
         image: formData.image,
-
       });
-
       toast.success("Product added successfully 🎂");
       navigate("/shop");
     } catch (error) {
@@ -86,14 +79,16 @@ const AddProduct = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="admin-container">
       <div className="admin-card">
         <h1>Add New Delight</h1>
-
         <form onSubmit={handleSubmit} className="admin-form">
           <div className="form-group2">
-            <label htmlFor="name">Product Name <span className="required">*</span></label>
+            <label htmlFor="name">
+              Product Name <span className="required">*</span>
+            </label>
             <input
               type="text"
               id="name"
@@ -104,10 +99,11 @@ const AddProduct = () => {
               required
             />
           </div>
-
           <div className="form-row">
             <div className="form-group2">
-              <label htmlFor="price">Price <span className="required">*</span></label>
+              <label htmlFor="price">
+                Price <span className="required">*</span>
+              </label>
               <input
                 type="number"
                 id="price"
@@ -120,9 +116,10 @@ const AddProduct = () => {
                 required
               />
             </div>
-
             <div className="form-group2">
-              <label htmlFor="category">Category <span className="required">*</span></label>
+              <label htmlFor="category">
+                Category <span className="required">*</span>
+              </label>
               <select
                 id="category"
                 name="category"
@@ -139,9 +136,10 @@ const AddProduct = () => {
               </select>
             </div>
           </div>
-
           <div className="form-group2">
-            <label htmlFor="description">Description <span className="required">*</span></label>
+            <label htmlFor="description">
+              Description <span className="required">*</span>
+            </label>
             <textarea
               id="description"
               name="description"
@@ -152,9 +150,10 @@ const AddProduct = () => {
               required
             />
           </div>
-
           <div className="form-group2">
-            <label htmlFor="image">Product Image <span className="required">*</span></label>
+            <label htmlFor="image">
+              Product Image <span className="required">*</span>
+            </label>
             <div className="image-upload-area2">
               <input
                 type="file"
@@ -185,24 +184,11 @@ const AddProduct = () => {
               Supported formats: JPG, PNG, GIF (max 5MB)
             </small>
           </div>
-
-          {/* <div className="form-group2 checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="inStock"
-                checked={formData.inStock}
-                onChange={handleChange}
-              />
-              <span>In Stock</span>
-            </label>
-          </div> */}
-
           <div className="form-actions">
             <button
               type="button"
               className="btn  btn-secondary1"
-              style={{backgroundColor:"#ccc"}}
+              style={{ backgroundColor: "#ccc" }}
               onClick={() => navigate("/shop")}
               disabled={loading}
             >
