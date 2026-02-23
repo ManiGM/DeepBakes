@@ -1,18 +1,26 @@
 [
   {
-    "_id": "1771785764556",
-    "username": "Deepu",
-    "password": "$2b$10$V8dmUQ7QKLMOpfm1vTKcv.wbxttoHQ50rW1x7OjxR1YFBsp5suAK2",
-    "phone": "9898989898",
-    "role": "admin",
-    "createdAt": "2026-02-22T18:42:44.556Z"
-  },
-  {
     "_id": "1771786035026",
     "username": "manideep",
     "password": "$2b$10$h/vLbblwNAFiOnznnZNW9u4vm2AMkLEotUKx/imncsMDByGjRmwti",
     "phone": "7036919586",
     "role": "user",
     "createdAt": "2026-02-22T18:47:15.026Z"
+  },
+  {
+    "_id": "1771789053027",
+    "username": "poojita",
+    "password": "$2b$10$7pdr.yiG8koyXD8N3tXAcOnFEGzniz8dJqa.cK8SdvthfssvycGTW",
+    "phone": "8767676767",
+    "role": "user",
+    "createdAt": "2026-02-22T19:37:33.027Z"
+  },
+  {
+    "_id": "1771789300931",
+    "username": "deepu",
+    "password": "$2b$10$RnSSKv6F3cLrefkugYQJJeXpMTgsgWi2cwZY5nN2J8KhjirAJygsi",
+    "phone": "9898989898",
+    "role": "admin",
+    "createdAt": "2026-02-22T19:41:40.931Z"
   }
 ]
