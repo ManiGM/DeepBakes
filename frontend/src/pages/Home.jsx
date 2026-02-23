@@ -84,7 +84,7 @@ const Home = () => {
             recipes
           </p>
           <div className="hero-buttons">
-            <Link to="/shop" className="btn btn-primary btn-large">
+            <Link to="/shop" className="btn btn-primary1 btn-large">
               Explore Our Treats
             </Link>
           </div>

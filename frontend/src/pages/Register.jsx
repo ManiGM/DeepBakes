@@ -4,6 +4,7 @@ import { authApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Forms.css";
 import CryptoJS from "crypto-js";
+import login_bg from "../assets/login_bg.jpg"
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -175,7 +176,7 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container"  style={{ backgroundImage: `url(${login_bg})` }}>
       <div className="auth-card">
         <h1>Join Deep Bakes</h1>
         {/* <p className="auth-subtitle">Create your account to start ordering</p> */}

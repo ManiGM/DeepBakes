@@ -32,7 +32,7 @@ const ProductCard = ({ product }) => {
         {!isAdmin && (
           <div className="product-actions">
             {!cartItem ? (
-              <button className="btn btn-primary" onClick={handleAddToCart}>
+              <button className="btn btn-primary1" onClick={handleAddToCart}>
                 Add to Cart
               </button>
             ) : (

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { productApi } from "../services/api";
 import toast from "react-hot-toast";
-import "../styles/AddProduct.css"
+import "../styles/AddProduct.css";
 const AddProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     description: "",
-    image: null,
-    category: "cake", // default category
+    image: "",
+    category: "cake", 
     inStock: true,
   });
   const [imagePreview, setImagePreview] = useState(null);
@@ -26,41 +26,38 @@ const AddProduct = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        toast.error("Please upload an image file");
-        return;
-      }
+    if (!file) return;
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("Image size should be less than 5MB");
-        return;
-      }
-
-      setFormData((prev) => ({ ...prev, image: file }));
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
     }
-  };
 
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setFormData((prev) => ({
+        ...prev,
+        image: reader.result, // base64 stored here
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (
       !formData.name ||
       !formData.price ||
       !formData.description ||
       !formData.image
     ) {
-      toast.error("Please fill in all fields and upload an image");
+      toast.error("Please fill all fields");
       return;
     }
 
@@ -72,35 +69,31 @@ const AddProduct = () => {
     try {
       setLoading(true);
 
-      // Create FormData for file upload
-      const productData = new FormData();
-      productData.append("name", formData.name);
-      productData.append("price", formData.price);
-      productData.append("description", formData.description);
-      productData.append("category", formData.category);
-      productData.append("inStock", formData.inStock);
-      productData.append("image", formData.image);
+      await productApi.create({
+        name: formData.name,
+        price: Number(formData.price),
+        description: formData.description,
+        image: formData.image,
 
-      await productApi.create(productData);
+      });
 
-      toast.success("Product added successfully! 🎂");
+      toast.success("Product added successfully 🎂");
       navigate("/shop");
     } catch (error) {
-      console.error("Failed to add product:", error);
-      toast.error("Failed to add product. Please try again.");
+      console.error(error);
+      toast.error("Failed to add product");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="admin-container">
       <div className="admin-card">
         <h1>Add New Delight</h1>
-        
+
         <form onSubmit={handleSubmit} className="admin-form">
           <div className="form-group2">
-            <label htmlFor="name">Product Name *</label>
+            <label htmlFor="name">Product Name <span className="required">*</span></label>
             <input
               type="text"
               id="name"
@@ -114,7 +107,7 @@ const AddProduct = () => {
 
           <div className="form-row">
             <div className="form-group2">
-              <label htmlFor="price">Price ($) *</label>
+              <label htmlFor="price">Price <span className="required">*</span></label>
               <input
                 type="number"
                 id="price"
@@ -129,13 +122,13 @@ const AddProduct = () => {
             </div>
 
             <div className="form-group2">
-              <label htmlFor="category">Category</label>
+              <label htmlFor="category">Category <span className="required">*</span></label>
               <select
                 id="category"
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="form-select"
+                className="form-select1 custom-arrow"
               >
                 <option value="cake">Cakes</option>
                 <option value="pastry">Pastries</option>
@@ -148,7 +141,7 @@ const AddProduct = () => {
           </div>
 
           <div className="form-group2">
-            <label htmlFor="description">Description *</label>
+            <label htmlFor="description">Description <span className="required">*</span></label>
             <textarea
               id="description"
               name="description"
@@ -161,7 +154,7 @@ const AddProduct = () => {
           </div>
 
           <div className="form-group2">
-            <label htmlFor="image">Product Image *</label>
+            <label htmlFor="image">Product Image <span className="required">*</span></label>
             <div className="image-upload-area2">
               <input
                 type="file"
@@ -193,7 +186,7 @@ const AddProduct = () => {
             </small>
           </div>
 
-          <div className="form-group2 checkbox-group">
+          {/* <div className="form-group2 checkbox-group">
             <label className="checkbox-label">
               <input
                 type="checkbox"
@@ -203,12 +196,13 @@ const AddProduct = () => {
               />
               <span>In Stock</span>
             </label>
-          </div>
+          </div> */}
 
           <div className="form-actions">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn  btn-secondary1"
+              style={{backgroundColor:"#ccc"}}
               onClick={() => navigate("/shop")}
               disabled={loading}
             >
@@ -216,7 +210,7 @@ const AddProduct = () => {
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary1"
               disabled={loading}
             >
               {loading ? "Adding Product..." : "Add Product"}

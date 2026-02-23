@@ -75,7 +75,7 @@ const Cart = () => {
       <div className="empty-cart">
         <h2>Your cart is empty</h2>
         <p>Looks like you haven't added any treats yet!</p>
-        <button className="btn btn-primary" onClick={() => navigate("/shop")}>
+        <button className="btn btn-primary1" onClick={() => navigate("/shop")}>
           Browse Cakes
         </button>
       </div>
@@ -169,7 +169,7 @@ const Cart = () => {
               placeholder="Full Name"
               value={shippingDetails.name}
               onChange={handleInputChange}
-              className="form-input"
+              className="form-input1"
             />
             <input
               type="tel"
@@ -177,7 +177,7 @@ const Cart = () => {
               placeholder="Phone Number"
               value={shippingDetails.phone}
               onChange={handleInputChange}
-              className="form-input"
+              className="form-input1"
               pattern="[6-9]{1}[0-9]{9}"
               maxLength={10}
             />
@@ -187,10 +187,10 @@ const Cart = () => {
               value={shippingDetails.address}
               onChange={handleInputChange}
               rows="3"
-              className="form-input"
+              className="form-input1"
             />
             <button
-              className="btn btn-primary btn-block"
+              className="btn btn-primary1 btn-block"
               onClick={handlePlaceOrder}
               disabled={loading}
             >

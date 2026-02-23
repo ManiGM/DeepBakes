@@ -50,7 +50,7 @@
 
 .form-group2 input,
 .form-group2 textarea,
-.form-select {
+.form-select1 {
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
@@ -62,7 +62,7 @@
 
 .form-group2 input:focus,
 .form-group2 textarea:focus,
-.form-select:focus {
+.form-select1:focus {
   border-color: #ff6b6b;
   box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
   outline: none;
@@ -159,18 +159,18 @@
   transition: all 0.3s ease;
 }
 
-.btn-secondary {
+.btn-secondary1 {
   background: #e0e0e0;
   color: #333;
 }
 
-.btn-secondary:hover {
+.btn-secondary1:hover {
   background: #cfcfcf;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
-  color: white;
+  color: rgb(11, 9, 9);
   box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
 }
 
@@ -211,4 +211,25 @@
   .admin-card {
     padding: 25px;
   }
+}
+.btn-primary2 {
+  background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
+  color: rgb(115, 93, 93);
+  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+}
+
+.btn-primary2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(109, 89, 89, 0.5);
+}
+
+.custom-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath d="M0 0h10l-5 6z" fill="%2301627d" /%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  padding-right: 30px;
 }

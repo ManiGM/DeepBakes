@@ -5,7 +5,7 @@
 .cart-page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 10px 20px;
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #faf9f8 0%, #ffffff 100%);
   min-height: calc(100vh - 80px);
@@ -35,7 +35,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 30px;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 /* Cart Items Section */
@@ -46,6 +46,8 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   border: 1px solid rgba(248, 180, 180, 0.2);
   transition: all 0.3s ease;
+  overflow-y: auto;
+  height: 100%;
 }
 
 .cart-items:hover {
@@ -259,7 +261,7 @@
   font-weight: 600;
 }
 
-.form-input {
+.form-input1 {
   width: 100%;
   padding: 14px 18px;
   margin-bottom: 15px;
@@ -268,21 +270,19 @@
   font-size: 1rem;
   color:"#ccc";
   transition: all 0.3s ease;
-  background: #fff;
+  background: #ffffff;
 }
 
-.form-input:focus {
+.form-input1:focus {
   outline: none;
   /* border-color: #f8b4b4; */
-  background: rgb(217, 204, 204);
-  box-shadow: 0 0 0 4px rgba(248, 180, 180, 0.1);
+  background: rgb(255, 255, 255);
+  /* box-shadow: 0 0 0 4px rgba(248, 180, 180, 0.1); */
 }
 
-.form-input:hover {
-  border-color: #f8b4b4;
-}
 
-textarea.form-input {
+
+textarea.form-input1 {
   resize: vertical;
   min-height: 100px;
 }
