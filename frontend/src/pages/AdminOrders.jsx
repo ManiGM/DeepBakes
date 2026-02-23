@@ -97,7 +97,12 @@ const AdminOrders = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading orders...</div>;
+    return (
+      <div className="orders-loading">
+        <div className="spinner"></div>
+        <p>Loading your orders...</p>
+      </div>
+    );
   }
 
   return (
@@ -178,7 +183,7 @@ const AdminOrders = () => {
                   </span>
                 </div>
                 <span className="order-date">
-                 Ordered On - {formatDate(order.createdAt)}
+                  Ordered On - {formatDate(order.createdAt)}
                 </span>
               </div>
               <div className="order-details">

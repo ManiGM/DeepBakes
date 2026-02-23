@@ -30,8 +30,13 @@ const Shop = () => {
       product.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  if (loading) {
-    return <div className="loading">Loading delicious treats...</div>;
+    if (loading) {
+    return (
+      <div className="orders-loading">
+        <div className="spinner"></div>
+        <p>Loading delicious treats...</p>
+      </div>
+    );
   }
 
   return (
