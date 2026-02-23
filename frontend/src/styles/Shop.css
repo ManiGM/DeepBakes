@@ -1,12 +1,12 @@
 .shop-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 100%;
+  margin: 0 ;
+  padding: 5px 20px;
 }
 
 .shop-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 4px;
 }
 
 .shop-header h1 {
@@ -22,17 +22,35 @@
 }
 
 .search-bar {
-  max-width: 500px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 0;
 }
 
 .search-input {
   width: 100%;
-  padding: 15px 20px;
-  border: 2px solid #f0f0f0;
+  padding: 10px 10px;
+  border: 2px solid transparent;
   border-radius: 30px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(90deg, #f8b4b4, #f59e9e, #f8b4b4) border-box;
+  background-size: 200% 100%;
+  animation: borderMove 3s linear infinite;
+}
+
+@keyframes borderMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(248, 180, 180, 0.3);
 }
 
 .search-input:focus {
@@ -44,7 +62,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 30px;
-  margin-top: 40px;
+  margin-top: 5px;
 }
 
 .product-card {
@@ -60,7 +78,7 @@
 }
 
 .product-image {
-  height: 200px;
+  height: 150px;
   overflow: hidden;
 }
 

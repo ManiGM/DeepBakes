@@ -26,24 +26,23 @@ const Register = () => {
     </svg>
   );
 
-  const EyeClosed = () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {/* Eye shape */}
-      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-10-7-10-7a21.77 21.77 0 0 1 5.06-6.94" />
-      <path d="M1 1l22 22" />
-      <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-.88" />
-      <path d="M14.12 14.12L9.88 9.88" />
-    </svg>
-  );
+ const EyeClosed = () => (
+   <svg
+     width="20"
+     height="20"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     strokeWidth="2"
+     strokeLinecap="round"
+     strokeLinejoin="round"
+   >
+     {/* Main eye shape */}
+     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+     {/* Slash/strikethrough */}
+     <line x1="2" y1="2" x2="22" y2="22" />
+   </svg>
+ );
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -171,13 +171,14 @@
 /* Section Headers */
 .section-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 5px;
 }
 
 .section-subtitle {
   display: block;
-  color: #f8b4b4;
-  font-size: 1rem;
+  color: #a04e4e;
+  font-size: 1.4rem;
+  font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 10px;
@@ -747,7 +748,7 @@
 
 /* Contact Section Styles */
 .contact-section {
-  margin-top: 60px;
+  margin-top: 5px;
   padding: 20px;
   animation: slideUp 0.8s ease-out;
 }
@@ -791,7 +792,7 @@
   position: relative;
 }
 
-.contact-item:first-child::after {
+.contact-item:second-child::after {
   content: "";
   position: absolute;
   right: -20px;
@@ -1100,7 +1101,7 @@
   position: relative;
 }
 
-.contact-item:not(:last-child)::after {
+.contact-item:not(:fifith-child)::after {
   content: "";
   position: absolute;
   right: -15px;
@@ -1134,7 +1135,7 @@
 }
 
 /* Animation for location icon */
-.contact-item:last-child .contact-icon {
+.contact-item:fifth-child .contact-icon {
   animation: float 3s ease-in-out infinite;
   animation-delay: 0.75s;
 }

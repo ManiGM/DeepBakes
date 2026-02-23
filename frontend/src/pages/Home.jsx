@@ -1,20 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
-
-// Import images (you'll need to add these images to your project)
-// For now, we'll use placeholder comments - replace with actual imports
 import plumcake from "../assets/plumcake.jpg";
 import plumCake2 from "../assets/plumcake2.png";
 import plumCake4 from "../assets/plumcake4.png";
-import plumCake1 from "../assets/plumcake1.png";
-import plumcake5 from "../assets/plumcake5.png";
 import plumCake3 from "../assets/plumcake3.png";
 import cookies from "../assets/cookies.jpg";
 import malaiToast from "../assets/MalaiToast.jpg";
 
 const Home = () => {
-  // Featured cakes data
   const featuredCakes = [
     {
       id: 1,
@@ -78,7 +71,6 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      {/* Hero Section with Parallax Effect */}
       <section className="hero-section1">
         <div className="hero-overlay"></div>
         <div className="hero-content">
@@ -95,24 +87,7 @@ const Home = () => {
             <Link to="/shop" className="btn btn-primary btn-large">
               Explore Our Treats
             </Link>
-            {/* <Link to="/custom-order" className="btn btn-outline btn-large">
-              Custom Order
-            </Link> */}
           </div>
-          {/* <div className="hero-stats">
-            <div className="stat-item">
-              <span className="stat-number">50+</span>
-              <span className="stat-label">Varieties</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">10k+</span>
-              <span className="stat-label">Happy Customers</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">24h</span>
-              <span className="stat-label">Fresh Daily</span>
-            </div>
-          </div> */}
         </div>
         <div className="hero-image">
           <img
@@ -124,7 +99,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Categories */}
       <section className="categories-section">
         <div className="section-header">
           <span className="section-subtitle"></span>
@@ -162,60 +136,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* <section className="featured-section">
-        <div className="section-header">
-          <span className="section-subtitle">Our Bestsellers</span>
-          <h2 className="section-title">Featured Cakes</h2>
-        </div>
-        <div className="cakes-grid">
-          {featuredCakes.map((cake) => (
-            <div key={cake.id} className="cake-card">
-              <div className="cake-image">
-                <img src={cake.image} alt={cake.name} />
-                {cake.badge && <span className="cake-badge">{cake.badge}</span>}
-                <div className="cake-overlay">
-                  <button className="quick-view-btn">Quick View</button>
-                </div>
-              </div>
-              <div className="cake-info">
-                <h3>{cake.name}</h3>
-                <p>{cake.description}</p>
-                <div className="cake-footer">
-                  <span className="cake-price">{cake.price}</span>
-                  <Link to={`/product/${cake.id}`} className="btn btn-small">
-                    Order Now
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="section-footer">
-          <Link to="/shop" className="btn btn-secondary">
-            View All Cakes
-          </Link>
-        </div>
-      </section> */}
-
-      {/* Special Offer Banner */}
-      {/* <section className="offer-banner">
-        <div className="offer-content">
-          <span className="offer-tag">Limited Time Offer</span>
-          <h2>Get 20% Off on First Order</h2>
-          <p>Use code: SWEETJOY20</p>
-          <Link to="/shop" className="btn btn-primary btn-large">
-            Shop Now
-          </Link>
-        </div>
-        <div className="offer-image">
-          <img
-            src="https://images.unsplash.com/photo-1558301211-0d8c8ddee6b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            alt="Special offer cake"
-          />
-        </div>
-      </section> */}
-
-      {/* Features Section */}
       <section className="features-section">
         <div className="feature">
           <div className="feature-icon-wrapper">
@@ -247,7 +167,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
       <section className="testimonials-section">
         <div className="section-header">
           <span className="section-subtitle">What Our Customers Say</span>
@@ -276,13 +195,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Instagram Gallery */}
       <section className="gallery-section">
         <div className="section-header">
           <span className="section-subtitle">Contact Us On</span>
-          {/* <h2 className="section-title">@deep_bakes_</h2> */}
         </div>
-        {/* Contact Information Section */}
         <div className="contact-section">
           <div className="contact-card">
             <div className="contact-item">
@@ -345,7 +261,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* New Location Item */}
             <div className="contact-item">
               <div className="contact-icon location-icon">
                 <svg
@@ -368,28 +283,11 @@ const Home = () => {
                 <span className="contact-value location-text">
                   Hyderabad, Telangana
                 </span>
-                <span className="location-detail">
-                  Serving fresh across the city
-                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Newsletter Section */}
-      {/* <section className="newsletter-section">
-        <div className="newsletter-content">
-          <h2>Subscribe to Our Newsletter</h2>
-          <p>Get updates on new products, special offers, and baking tips</p>
-          <form className="newsletter-form">
-            <input type="email" placeholder="Enter your email" />
-            <button type="submit" className="btn btn-primary">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section> */}
     </div>
   );
 };

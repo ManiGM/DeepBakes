@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { productApi } from "../services/api";
 import toast from "react-hot-toast";
-import "../styles/Forms.css";
-
+import "../styles/AddProduct.css"
 const AddProduct = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -98,10 +97,9 @@ const AddProduct = () => {
     <div className="admin-container">
       <div className="admin-card">
         <h1>Add New Delight</h1>
-        <p className="admin-subtitle">Create a new product for your bakery</p>
-
+        
         <form onSubmit={handleSubmit} className="admin-form">
-          <div className="form-group">
+          <div className="form-group2">
             <label htmlFor="name">Product Name *</label>
             <input
               type="text"
@@ -115,7 +113,7 @@ const AddProduct = () => {
           </div>
 
           <div className="form-row">
-            <div className="form-group">
+            <div className="form-group2">
               <label htmlFor="price">Price ($) *</label>
               <input
                 type="number"
@@ -130,7 +128,7 @@ const AddProduct = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group2">
               <label htmlFor="category">Category</label>
               <select
                 id="category"
@@ -149,7 +147,7 @@ const AddProduct = () => {
             </div>
           </div>
 
-          <div className="form-group">
+          <div className="form-group2">
             <label htmlFor="description">Description *</label>
             <textarea
               id="description"
@@ -162,9 +160,9 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group2">
             <label htmlFor="image">Product Image *</label>
-            <div className="image-upload-area">
+            <div className="image-upload-area2">
               <input
                 type="file"
                 id="image"
@@ -195,7 +193,7 @@ const AddProduct = () => {
             </small>
           </div>
 
-          <div className="form-group checkbox-group">
+          <div className="form-group2 checkbox-group">
             <label className="checkbox-label">
               <input
                 type="checkbox"
