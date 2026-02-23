@@ -34,6 +34,7 @@ api.interceptors.response.use(
 export const productApi = {
   getAll: () => api.get("/products"),
   create: (data) => api.post("/products", data),
+  delete: (id) => api.delete(`/products/${id}`),
 };
 
 export const orderApi = {

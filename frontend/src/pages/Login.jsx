@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 import { authApi } from "../services/api";
 import "../styles/Forms.css";
+import login_bg from "../assets/login_bg.jpg";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +23,31 @@ const Login = () => {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
+
+  const EyeOpen = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24">
+      <path
+        fill="currentColor"
+        d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"
+      />
+    </svg>
+  );
+
+  const EyeClosed = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+      <line x1="2" y1="2" x2="22" y2="22" />
+    </svg>
+  );
 
   const validateForm = () => {
     const newErrors = {};
@@ -43,7 +70,7 @@ const Login = () => {
       setLoading(true);
       const response = await authApi.login(formData);
       login(response.data);
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
       setErrors({
@@ -55,7 +82,10 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div
+      className="auth-container"
+      style={{ backgroundImage: `url(${login_bg})` }}
+    >
       <div className="auth-card">
         <h1>Welcome Back!</h1>
         <p className="auth-subtitle">Login to satisfy your sweet cravings</p>
@@ -83,16 +113,24 @@ const Login = () => {
             <label htmlFor="password">
               Password<span className="required">*</span>
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              className={errors.password ? "error" : ""}
-              disabled={loading}
-            />
+            <div className="password-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                className={errors.password ? "error" : ""}
+                disabled={loading}
+              />
+              <span
+                className="eye-icon"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <EyeClosed /> : <EyeOpen />}
+              </span>
+            </div>
             {errors.password && (
               <span className="field-error">{errors.password}</span>
             )}

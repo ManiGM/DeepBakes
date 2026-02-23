@@ -1,5 +1,6 @@
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Shop.css";
+import { productApi } from "../services/api";
 
 const ProductCard = ({ product }) => {
   const { user, addToCart, updateCartQuantity, cart, isAdmin } = useAuth();
@@ -14,8 +15,36 @@ const ProductCard = ({ product }) => {
     updateCartQuantity(product._id, delta);
   };
 
+  const onDelete = async (id) => {
+    try {
+      await productApi.delete(id);
+      window.location.reload();
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
+
   return (
-    <div className="product-card">
+    <div className="product-card" style={{ position: "relative" }}>
+      {isAdmin && (
+        <button
+          onClick={() => onDelete(product._id)}
+          aria-label="Delete product"
+          style={{
+            position: "absolute",
+            top: "8px",
+            right: "8px",
+            border: "none",
+            background: "transparent",
+            cursor: "pointer",
+            fontSize: "14px",
+            color: "#540505",
+            padding: "4px",
+          }}
+        >
+          ❌
+        </button>
+      )}
       <div className="product-image">
         <img src={product.image} alt={product.name} loading="lazy" />
       </div>

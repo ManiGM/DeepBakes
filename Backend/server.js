@@ -379,6 +379,15 @@ app.post("/products", async (req, res) => {
   res.json("Saved");
 });
 
+app.delete("/products/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
+
 // ---------- ORDERS ----------
 app.post("/orders", async (req, res) => {
   const order = new Order(req.body);

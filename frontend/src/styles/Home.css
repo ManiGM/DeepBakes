@@ -1161,10 +1161,10 @@
 .btn-primary1 {
   background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
   color: rgb(255, 255, 255);
-  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+  /* box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4); */
 }
 
 .btn-primary1:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
+  /* box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5); */
 }
