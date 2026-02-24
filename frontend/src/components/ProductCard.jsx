@@ -26,25 +26,6 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="product-card" style={{ position: "relative" }}>
-      {isAdmin && (
-        <button
-          onClick={() => onDelete(product._id)}
-          aria-label="Delete product"
-          style={{
-            position: "absolute",
-            top: "8px",
-            right: "8px",
-            border: "none",
-            background: "transparent",
-            cursor: "pointer",
-            fontSize: "14px",
-            color: "#540505",
-            padding: "4px",
-          }}
-        >
-          ❌
-        </button>
-      )}
       <div className="product-image">
         <img src={product.image} alt={product.name} loading="lazy" />
       </div>
@@ -55,6 +36,25 @@ const ProductCard = ({ product }) => {
           <span>&#8377;</span>
           {Number(product.price || 0).toFixed(2)}
         </div>
+        {isAdmin && (
+          <button
+            onClick={() => onDelete(product._id)}
+            aria-label="Delete product"
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "8px",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: "14px",
+              color: "#540505",
+              padding: "4px",
+            }}
+          >
+            ❌
+          </button>
+        )}
         {!isAdmin && (
           <div className="product-actions">
             {!cartItem ? (

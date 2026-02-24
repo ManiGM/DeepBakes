@@ -39,8 +39,15 @@ const Home = () => {
         <div className="hero-content">
           <span className="hero-badge">
             Deep Bakes
-            <span className="tagline"> Flavour of Purity, Taste of Home</span>
+            <span
+              style={{ fontSize: "10px", textDecoration: "italic" }}
+              className="tagline"
+            >
+              {" "}
+              .....Flavour of Purity, Taste of Home
+            </span>
           </span>
+
           <h1 className="hero-title">
             Artisanal Bakes for
             <span className="highlight"> Every Occasion</span>
