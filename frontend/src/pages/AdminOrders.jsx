@@ -51,8 +51,10 @@ const AdminOrders = () => {
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
+      setLoading(true);
       await orderApi.updateStatus(orderId, newStatus);
       toast.success(`Order  ${newStatus}`);
+      setLoading(false);
       setOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === orderId ? { ...order, status: newStatus } : order,
