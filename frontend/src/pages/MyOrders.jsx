@@ -87,39 +87,6 @@ const MyOrders = () => {
         </div>
       ) : (
         <>
-          <div className="order-filters">
-            <button
-              className={`filter-btn ${filter === "all" ? "active" : ""}`}
-              onClick={() => setFilter("all")}
-            >
-              All Orders ({orders.length})
-            </button>
-            <button
-              className={`filter-btn ${filter === "pending" ? "active" : ""}`}
-              onClick={() => setFilter("pending")}
-            >
-              Pending ({orders.filter((o) => o.status === "Pending").length})
-            </button>
-            <button
-              className={`filter-btn ${filter === "accepted" ? "active" : ""}`}
-              onClick={() => setFilter("accepted")}
-            >
-              Accepted ({orders.filter((o) => o.status === "Accepted").length})
-            </button>
-            <button
-              className={`filter-btn ${filter === "delivered" ? "active" : ""}`}
-              onClick={() => setFilter("delivered")}
-            >
-              Delivered ({orders.filter((o) => o.status === "Delivered").length}
-              )
-            </button>
-            <button
-              className={`filter-btn ${filter === "rejected" ? "active" : ""}`}
-              onClick={() => setFilter("rejected")}
-            >
-              Rejected ({orders.filter((o) => o.status === "Rejected").length})
-            </button>
-          </div>
           <div className="orders-container">
             {filteredOrders.length === 0 ? (
               <div className="no-filtered-orders">

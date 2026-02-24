@@ -10,6 +10,7 @@ const Cart = () => {
     useAuth();
   const [shippingDetails, setShippingDetails] = useState({
     name: user?.username || "",
+    email: "",
     phone: "",
     address: "",
   });
@@ -44,6 +45,7 @@ const Cart = () => {
       const orderData = {
         userId: user.id,
         userName: shippingDetails.name,
+        email: shippingDetails.email,
         phone: shippingDetails.phone,
         address: shippingDetails.address,
         items: cart.map(({ _id, name, price, quantity }) => ({
@@ -67,6 +69,7 @@ const Cart = () => {
       setLoading(false);
     }
   };
+
   if (cart.length === 0) {
     return (
       <div className="empty-cart">
@@ -165,6 +168,17 @@ const Cart = () => {
               value={shippingDetails.name}
               onChange={handleInputChange}
               className="form-input1"
+              readOnly
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={shippingDetails.email}
+              onChange={handleInputChange}
+              className="form-input1"
+              required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             />
             <input
               type="tel"
