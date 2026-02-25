@@ -88,7 +88,7 @@ const Login = () => {
     >
       <div className="auth-card">
         <h1>Welcome Back!</h1>
-        <p className="auth-subtitle">Login to satisfy your sweet cravings</p>
+        <p className="auth-subtitle">Login To Satisfy Your Sweet Cravings</p>
         {errors.form && <div className="error-message">{errors.form}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -144,7 +144,8 @@ const Login = () => {
           </button>
         </form>
         <p className="auth-footer">
-          Don't have an account? <Link to="/register">Register here</Link>
+          Don't have an account? <Link to="/register">Register here</Link> |
+          <Link to="/forgetPassword">Forget Password</Link>
         </p>
       </div>
     </div>

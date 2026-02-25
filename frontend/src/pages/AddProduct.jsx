@@ -80,6 +80,15 @@ const AddProduct = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="orders-loading">
+        <div className="spinner"></div>
+        <p>Adding your Delight to the Shop.....</p>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-container">
       <div className="admin-card">

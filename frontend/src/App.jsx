@@ -17,6 +17,7 @@ import Cart from "./pages/Cart";
 import AddProduct from "./pages/AddProduct";
 import AdminOrders from "./pages/AdminOrders";
 import MyOrders from "./pages/MyOrders";
+import ForgotPassword from "./pages/ForgetPassword";
 import "./styles/App.css";
 
 function AppContent() {
@@ -29,6 +30,7 @@ function AppContent() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgetPassword" element={<ForgotPassword />} />
           <Route
             path="/cart"
             element={

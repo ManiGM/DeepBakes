@@ -70,6 +70,15 @@ const Cart = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="orders-loading">
+        <div className="spinner"></div>
+        <p>Placing your Order...</p>
+      </div>
+    );
+  }
+
   if (cart.length === 0) {
     return (
       <div className="empty-cart">
@@ -207,7 +216,7 @@ const Cart = () => {
             </button>
           </div>
           <p className="cart-quote">
-            "A party without sweet is just a meeting." — Julia Child
+            "A party without sweet is just a meeting." — Deep Bakes
           </p>
         </div>
       </div>

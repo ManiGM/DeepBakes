@@ -63,6 +63,7 @@ const AdminOrders = () => {
     } catch (error) {
       console.error("Failed to update order:", error);
       toast.error("Failed to update order status");
+      setLoading(false);
     }
   };
 
@@ -102,7 +103,7 @@ const AdminOrders = () => {
     return (
       <div className="orders-loading">
         <div className="spinner"></div>
-        <p>Loading your orders...</p>
+        <p>Loading Orders...</p>
       </div>
     );
   }
