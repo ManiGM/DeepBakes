@@ -13,15 +13,15 @@ app.use(cors());
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
 
-// mongoose
-//   .connect(process.env.MONGO_URI)
-//   .then(() => console.log("Connected to MongoDB Atlas"))
-//   .catch((err) => console.log("DB Error:", err));
-
 mongoose
-  .connect("mongodb://127.0.0.1:27017/deepbakes")
-  .then(() => console.log("Connected to Bakery DB"))
-  .catch((err) => console.log(err));
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.log("DB Error:", err));
+
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/deepbakes")
+//   .then(() => console.log("Connected to Bakery DB"))
+//   .catch((err) => console.log(err));
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },

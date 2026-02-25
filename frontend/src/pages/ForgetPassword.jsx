@@ -8,16 +8,13 @@ import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     phone: "",
     password: "",
     confirmPassword: "",
   });
-
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -49,24 +46,16 @@ const ForgotPassword = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "phone") {
-      // allow only digits
       let cleaned = value.replace(/\D/g, "");
-
-      // restrict first digit 6-9
       if (cleaned.length === 1 && !/^[6-9]$/.test(cleaned)) {
         cleaned = "";
       }
-
-      // max 10 digits
       cleaned = cleaned.slice(0, 10);
-
       setFormData((prev) => ({ ...prev, phone: cleaned }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -74,21 +63,18 @@ const ForgotPassword = () => {
 
   const validatePhone = () => {
     const newErrors = {};
-
     if (!formData.phone) {
       newErrors.phone = "Phone number is required";
     } else if (!/^[6-9]\d{9}$/.test(formData.phone)) {
       newErrors.phone =
         "Enter valid 10-digit mobile number starting with 6, 7, 8 or 9";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validatePassword = () => {
     const newErrors = {};
-
     if (!formData.password) {
       newErrors.password = "Password is required";
     } else if (formData.password.length < 6) {
@@ -96,16 +82,13 @@ const ForgotPassword = () => {
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
       newErrors.password = "Must contain uppercase, lowercase and number";
     }
-
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords don't match";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // STEP 1 → VERIFY PHONE
   const handleCheckPhone = async (e) => {
     e.preventDefault();
     if (!validatePhone()) return;
@@ -121,29 +104,24 @@ const ForgotPassword = () => {
         toast.error("Phone Number Not Registered");
       }
     } catch {
-      //   toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  // STEP 2 → UPDATE PASSWORD
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
     if (!validatePassword()) return;
-
     try {
       setLoading(true);
-
       await authApi.resetPassword({
         phone: formData.phone,
         password: formData.password,
       });
-
-      toast.success("Password updated successfully!");
+      toast.success("Password Updated!");
       navigate("/login");
     } catch {
-      toast.error("Password update failed");
+      toast.error("Password Update Failed");
     } finally {
       setLoading(false);
     }
