@@ -10,22 +10,19 @@ const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
-// ---------- CONFIG ----------
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
 
-// ---------- DB CONNECTION ----------
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((err) => console.log("DB Error:", err));
-
 // mongoose
-//   .connect("mongodb://127.0.0.1:27017/deepbakes")
-//   .then(() => console.log("Connected to Bakery DB"))
-//   .catch((err) => console.log(err));
+//   .connect(process.env.MONGO_URI)
+//   .then(() => console.log("Connected to MongoDB Atlas"))
+//   .catch((err) => console.log("DB Error:", err));
 
-// ---------- SCHEMAS ----------
+mongoose
+  .connect("mongodb://127.0.0.1:27017/deepbakes")
+  .then(() => console.log("Connected to Bakery DB"))
+  .catch((err) => console.log(err));
+
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -61,50 +58,81 @@ const Order = mongoose.model("Order", OrderSchema);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // deepbakes.home@gmail.com
-    pass: process.env.EMAIL_PASS, // app password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
-// ---------- AUTH ----------
 app.post("/register", async (req, res) => {
   try {
-    const exists = await User.findOne({ username: req.body.username });
+    const { username, phone, password } = req.body;
+    const exists = await User.findOne({ phone });
     if (exists) {
-      return res.status(400).json({ message: "Username already exists" });
+      return res.status(400).json({ message: "Phone Number Already Exists" });
     }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const user = new User({ ...req.body, password: hashedPassword });
-
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      username,
+      phone,
+      password: hashedPassword,
+    });
     await user.save();
-    res.json({ message: "Registered successfully" });
+    res.json({ success: true, message: "Registered Successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Registration failed" });
+    res.status(500).json({ message: "Registration Failed" });
   }
 });
 
 app.post("/login", async (req, res) => {
-  const user = await User.findOne({ username: req.body.username });
-
-  if (user && (await bcrypt.compare(req.body.password, user.password))) {
-    const token = jwt.sign(
-      { id: user._id, role: user.role, username: user.username },
-      SECRET,
-    );
-
-    res.json({
-      token,
-      role: user.role,
-      username: user.username,
-      id: user._id,
-    });
-  } else {
-    res.status(400).json("Invalid Credentials");
+  try {
+    const input = req.body.username?.trim();
+    let query = {};
+    const onlyDigits = /^\d+$/.test(input);
+    if (onlyDigits) {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(input)) {
+        return res
+          .status(400)
+          .json("Phone number must be 10 digits and start with 6, 7, 8, or 9");
+      }
+      query = { phone: input };
+    } else {
+      query = { username: input };
+    }
+    const user = await User.findOne(query);
+    if (user && (await bcrypt.compare(req.body.password, user.password))) {
+      const token = jwt.sign(
+        { id: user._id, role: user.role, username: user.username },
+        SECRET,
+      );
+      res.json({
+        token,
+        role: user.role,
+        username: user.username,
+        id: user._id,
+      });
+    } else {
+      res.status(400).json("Invalid Credentials");
+    }
+  } catch (error) {
+    res.status(500).json("Server error");
   }
 });
 
-// ---------- PRODUCTS ----------
+app.post("/check-user", async (req, res) => {
+  const user = await User.findOne({ phone: req.body.phone });
+  res.json({ exists: !!user });
+});
+
+app.post("/reset-password", async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  await User.findOneAndUpdate(
+    { phone: req.body.phone },
+    { password: hashedPassword },
+  );
+  res.json({ message: "Password Updated" });
+});
+
 app.get("/products", async (req, res) => {
   res.json(await Product.find());
 });
@@ -118,18 +146,11 @@ app.post("/products", async (req, res) => {
 app.delete("/products/:id", async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: "Product deleted successfully" });
+    res.json({ message: "Product Deleted" });
   } catch (error) {
-    res.status(500).json({ error: "Delete failed" });
+    res.status(500).json({ error: "Delete Failed" });
   }
 });
-
-// ---------- ORDERS ----------
-// app.post("/orders", async (req, res) => {
-//   const order = new Order(req.body);
-//   await order.save();
-//   res.json("Ordered");
-// });
 
 app.post("/orders", async (req, res) => {
   try {
@@ -141,7 +162,7 @@ app.post("/orders", async (req, res) => {
       to: process.env.OWNER_EMAIL,
       subject: `🆕 New Order Received — ${order.userName}`,
       html: `
-  <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
+    <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px;">
       
       <h2 style="color:#e91e63; margin-bottom:5px;">New Order Received</h2>
@@ -211,7 +232,7 @@ app.post("/orders", async (req, res) => {
     res.json("Ordered");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Order failed" });
+    res.status(500).json({ message: "Order Failed" });
   }
 });
 
@@ -222,13 +243,6 @@ app.get("/orders", async (req, res) => {
 app.get("/orders/:userId", async (req, res) => {
   res.json(await Order.find({ userId: req.params.userId }));
 });
-
-// app.put("/orders/:id", async (req, res) => {
-//   await Order.findByIdAndUpdate(req.params.id, {
-//     status: req.body.status,
-//   });
-//   res.json("Updated");
-// });
 
 app.put("/orders/:id", async (req, res) => {
   try {
@@ -243,7 +257,7 @@ app.put("/orders/:id", async (req, res) => {
         to: order.email,
         subject: `Order ${order.status} — DeepBakes`,
         html: `
-  <div style="font-family: Arial, sans-serif; background:#f5f7fa; padding:20px;">
+    <div style="font-family: Arial, sans-serif; background:#f5f7fa; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; border-radius:8px; padding:30px;">
 
       <h2 style="color:#e91e63; margin-bottom:5px;">Order Status Update</h2>
@@ -296,15 +310,14 @@ app.put("/orders/:id", async (req, res) => {
       });
       console.log("Status email sent to:", order.email);
     } else {
-      console.log("No email found for this order");
     }
     res.json("Updated");
   } catch (error) {
     console.error("Status update error:", error);
-    res.status(500).json({ message: "Update failed" });
+    res.status(500).json({ message: "Update Failed" });
   }
 });
-// ---------- START ----------
+
 app.listen(PORT, () =>
   console.log(`Deep Bakes server running on port ${PORT}`),
 );

@@ -51,8 +51,17 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username.trim()) {
-      newErrors.username = "UserName is required";
+    const usernameValue = formData.username.trim();
+    if (!usernameValue) {
+      newErrors.username = "UserName or Phone Number is required";
+    } else {
+      const onlyDigits = /^\d+$/.test(usernameValue);
+      if (onlyDigits) {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(usernameValue)) {
+          newErrors.username = "Phone Number must be 10 digits";
+        }
+      }
     }
     if (!formData.password) {
       newErrors.password = "Password is required";
@@ -92,8 +101,8 @@ const Login = () => {
         {errors.form && <div className="error-message">{errors.form}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">
-              UserName<span className="required">*</span>
+            {/* <label htmlFor="username">
+              UserName/Phone Number<span className="required">*</span>
             </label>
             <input
               type="text"
@@ -102,6 +111,19 @@ const Login = () => {
               value={formData.username}
               onChange={handleChange}
               placeholder="Enter your username"
+              className={errors.username ? "error" : ""}
+              disabled={loading}
+            /> */}
+            <label htmlFor="username">
+              UserName/Phone Number<span className="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Enter Your User Name or Phone Number"
               className={errors.username ? "error" : ""}
               disabled={loading}
             />
