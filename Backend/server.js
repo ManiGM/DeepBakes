@@ -16,7 +16,7 @@ app.use(
     credentials: true,
   }),
 );
-app.options("*", cors());
+app.options("/*", cors());
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
