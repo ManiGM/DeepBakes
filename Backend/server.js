@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const app = express();
+app.set("trust proxy", 1);
 const compression = require("compression");
 app.use(express.json({ limit: "50mb" }));
 app.use(compression());
@@ -14,6 +15,15 @@ app.use(cors());
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
+
+mongoose.set("bufferCommands", false);
+mongoose.set("strictQuery", true);
+
+const http = require("http");
+const https = require("https");
+
+http.globalAgent.keepAlive = true;
+https.globalAgent.keepAlive = true;
 
 mongoose
   .connect(process.env.MONGO_URI, {
@@ -29,6 +39,11 @@ mongoose
 //   .connect("mongodb://127.0.0.1:27017/deepbakes")
 //   .then(() => console.log("Connected to Bakery DB"))
 //   .catch((err) => console.log(err));
+
+mongoose.connection.once("open", async () => {
+  await mongoose.connection.db.admin().ping();
+  console.log("MongoDB warm connection ready");
+});
 
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -64,10 +79,20 @@ const Order = mongoose.model("Order", OrderSchema);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  pool: true,
+  maxConnections: 1,
+  maxMessages: 50,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+});
+
+app.use((req, res, next) => {
+  if (req.method === "GET") {
+    res.set("Cache-Control", "public, max-age=60");
+  }
+  next();
 });
 
 app.get("/health", (req, res) => {
