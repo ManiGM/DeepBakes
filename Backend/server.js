@@ -7,14 +7,27 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const app = express();
+const compression = require("compression");
 app.use(express.json({ limit: "50mb" }));
-app.use(cors());
+app.use(compression());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  }),
+);
+app.options("*", cors());
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    family: 4,
+  })
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.log("DB Error:", err));
 
@@ -61,6 +74,10 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
 });
 
 app.post("/register", async (req, res) => {
@@ -134,7 +151,7 @@ app.post("/reset-password", async (req, res) => {
 });
 
 app.get("/products", async (req, res) => {
-  res.json(await Product.find());
+  res.json(await Product.find().lean());
 });
 
 app.post("/products", async (req, res) => {
@@ -154,7 +171,6 @@ app.delete("/products/:id", async (req, res) => {
 
 app.post("/orders", async (req, res) => {
   try {
-    console.log("req", req);
     const order = new Order(req.body);
     await order.save();
     await transporter.sendMail({
@@ -237,11 +253,11 @@ app.post("/orders", async (req, res) => {
 });
 
 app.get("/orders", async (req, res) => {
-  res.json(await Order.find());
+  res.json(await Order.find().lean());
 });
 
 app.get("/orders/:userId", async (req, res) => {
-  res.json(await Order.find({ userId: req.params.userId }));
+  res.json(await Order.find({ userId: req.params.userId }).lean());
 });
 
 app.put("/orders/:id", async (req, res) => {
@@ -308,7 +324,6 @@ app.put("/orders/:id", async (req, res) => {
   </div>
   `,
       });
-      console.log("Status email sent to:", order.email);
     } else {
     }
     res.json("Updated");
@@ -318,6 +333,9 @@ app.put("/orders/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(`Deep Bakes server running on port ${PORT}`),
 );
+
+server.keepAliveTimeout = 65000;
+server.headersTimeout = 66000;
