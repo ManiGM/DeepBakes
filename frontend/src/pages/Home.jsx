@@ -141,7 +141,7 @@ const Home = () => {
                     <span className="hero-badge">
                       Deep Bakes
                       <span className="tagline">
-                        Flavour of Purity, Taste of Home
+                        .....Flavour of Purity, Taste of Home
                       </span>
                     </span>
 
@@ -198,7 +198,7 @@ const Home = () => {
           </button>
 
           {/* Thumbnail Navigation */}
-          <div className="carousel-thumbnails">
+          {/* <div className="carousel-thumbnails">
             {heroSlides.map((slide, index) => (
               <div
                 key={slide.id}
@@ -209,7 +209,7 @@ const Home = () => {
                 <div className="thumbnail-overlay"></div>
               </div>
             ))}
-          </div>
+          </div> */}
 
           {/* Dots Indicator */}
           <div className="carousel-dots">
