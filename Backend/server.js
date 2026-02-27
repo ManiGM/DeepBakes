@@ -10,13 +10,7 @@ const app = express();
 const compression = require("compression");
 app.use(express.json({ limit: "50mb" }));
 app.use(compression());
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-  }),
-);
-app.options("/*", cors());
+app.use(cors());
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
