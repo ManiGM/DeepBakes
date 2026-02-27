@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API_BASE_URL = "https://deepbakes.onrender.com";
+export const API_BASE_URL = "https://deepbakes.onrender.com";
 // const API_BASE_URL = "http://localhost:2213";
 
 const api = axios.create({

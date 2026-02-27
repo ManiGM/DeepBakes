@@ -356,5 +356,5 @@ const server = app.listen(PORT, () =>
   console.log(`Deep Bakes server running on port ${PORT}`),
 );
 
-server.keepAliveTimeout = 65000;
-server.headersTimeout = 66000;
+server.keepAliveTimeout = 120000;
+server.headersTimeout = 125000;

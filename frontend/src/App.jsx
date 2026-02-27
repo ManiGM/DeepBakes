@@ -71,6 +71,13 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    const wakeServer = () => fetch(`${API_BASE_URL}/health`).catch(() => {});
+    wakeServer();
+    const interval = setInterval(wakeServer, 2 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Router>
       <AuthProvider>
