@@ -273,6 +273,7 @@ const Register = () => {
           <button
             type="submit"
             className="btn btn-primary btn-block1"
+           
             disabled={loading}
           >
             {loading ? (

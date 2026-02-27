@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../styles/Home.css";
 import plumcake from "../assets/plumcake.jpg";
 import plumCake3 from "../assets/plumcake3.png";
 import cookies from "../assets/cookies.jpg";
 import malaiToast from "../assets/MalaiToast.jpg";
-
 const Home = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const testimonials = [
     {
       id: 1,
@@ -32,45 +34,197 @@ const Home = () => {
     },
   ];
 
+  const heroSlides = [
+    {
+      id: 1,
+      title: "Freshly Baked",
+      highlight: "Premium Plum Cakes",
+      subtitle:
+        "Rich, moist and baked with premium dry fruits | Aged in rum for 6 months | Loaded with cashews, almonds & raisins",
+      image: plumCake3,
+      features: [
+        "6 months rum-aged",
+        "Premium dry fruits",
+        "Rich & moist texture",
+      ],
+    },
+    {
+      id: 2,
+      title: "Crispy & Golden",
+      highlight: "Malai Toast Delight",
+      subtitle:
+        "Traditional taste with a modern twist | Creamy malai filling | Crispy golden exterior | Perfect tea-time companion",
+      image: malaiToast,
+      features: [
+        "Creamy malai filling",
+        "Crispy exterior",
+        "Traditional recipe",
+      ],
+    },
+    {
+      id: 3,
+      title: "Sweet & Crunchy",
+      highlight: "Butter Cookies",
+      subtitle:
+        "Perfect companions for your tea time | Melt-in-mouth texture | Made with pure butter | Available in 5 flavors",
+      image: cookies,
+      features: ["Pure butter", "5 flavors", "Melt-in-mouth"],
+    },
+    {
+      id: 4,
+      title: "Rich & Creamy",
+      highlight: "Chocolate Brownies",
+      subtitle:
+        "Decadent chocolate brownies with gooey center | Made with Belgian chocolate | Topped with walnuts | Perfect dessert treat",
+      image: plumcake, // You can replace with actual brownie image
+      features: ["Belgian chocolate", "Gooey center", "Walnut topping"],
+    },
+    // {
+    //   id: 5,
+    //   title: "Festive Special",
+    //   highlight: "Fruit Cakes",
+    //   subtitle:
+    //     "Traditional fruit cake loaded with candied peels | Baked to perfection | Perfect for celebrations | Aged for extra flavor",
+    //   image: plumCake3, // You can replace with actual fruit cake image
+    //   features: ["Candied peels", "Aged flavor", "Festive special"],
+    // },
+    // {
+    //   id: 6,
+    //   title: "Tea Time Favorites",
+    //   highlight: "Milk Bread",
+    //   subtitle:
+    //     "Soft and fluffy milk bread | Freshly baked daily | No preservatives | Perfect for sandwiches and toast",
+    //   image: malaiToast, // You can replace with actual bread image
+    //   features: ["Fresh daily", "No preservatives", "Soft texture"],
+    // },
+  ];
+
+  // Auto-play carousel
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
+    );
+  };
+
   return (
     <div className="home-page">
-      <section className="hero-section1">
-        <div className="hero-overlay"></div>
-        <div className="hero-content">
-          <span className="hero-badge">
-            Deep Bakes
-            <span
-              style={{ fontSize: "10px", textDecoration: "italic" }}
-              className="tagline"
-            >
-              {" "}
-              .....Flavour of Purity, Taste of Home
-            </span>
-          </span>
+      {/* Hero Carousel Section */}
+      <section className="hero-carousel">
+        <div className="carousel-container">
+          {/* Main Carousel Slides */}
+          <div
+            className="carousel-track"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {heroSlides.map((slide) => (
+              <div key={slide.id} className="carousel-slide">
+                <div className="slide-content">
+                  <div className="hero-overlay"></div>
 
-          <h1 className="hero-title">
-            Artisanal Bakes for
-            <span className="highlight"> Every Occasion</span>
-          </h1>
-          <p className="hero-subtitle">
-            Handcrafted with love, using the finest ingredients and traditional
-            recipes
-          </p>
-          <div className="hero-buttons">
-            <Link to="/shop" className="btn btn-primary1 btn-large">
-              Explore Our Treats
-            </Link>
+                  <div className="hero-content">
+                    <span className="hero-badge">
+                      Deep Bakes
+                      <span className="tagline">
+                        Flavour of Purity, Taste of Home
+                      </span>
+                    </span>
+
+                    <h1 className="hero-title">
+                      {slide.title}
+                      <span className="highlight">{slide.highlight}</span>
+                    </h1>
+
+                    <p className="hero-subtitle">{slide.subtitle}</p>
+
+                    <div className="hero-buttons">
+                      <Link to="/shop" className="btn btn-primary1 btn-large">
+                        Explore Now
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="hero-image">
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="floating-animation1"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Navigation Arrows */}
+          <button className="carousel-arrow prev" onClick={prevSlide}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button className="carousel-arrow next" onClick={nextSlide}>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+
+          {/* Thumbnail Navigation */}
+          <div className="carousel-thumbnails">
+            {heroSlides.map((slide, index) => (
+              <div
+                key={slide.id}
+                className={`thumbnail ${index === currentSlide ? "active" : ""}`}
+                onClick={() => goToSlide(index)}
+              >
+                <img src={slide.image} alt={slide.title} />
+                <div className="thumbnail-overlay"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Dots Indicator */}
+          <div className="carousel-dots">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                className={`dot ${index === currentSlide ? "active" : ""}`}
+                onClick={() => goToSlide(index)}
+              />
+            ))}
           </div>
         </div>
-        <div className="hero-image">
-          <img
-            src={plumcake}
-            alt="Delicious cake"
-            style={{ width: "500px", height: "400px" }}
-            className="floating-animation1"
-          />
-        </div>
       </section>
+
+      {/* Rest of the sections remain the same */}
       <section className="categories-section">
         <div className="section-header">
           <span className="section-subtitle"></span>
@@ -93,20 +247,21 @@ const Home = () => {
           </div>
           <div className="category-card">
             <div className="category-image">
-              <img src={malaiToast} />
+              <img src={malaiToast} alt="Malai Toast" />
             </div>
             <h3>Malai Toast</h3>
             <p>Fresh and fruity delights</p>
           </div>
           <div className="category-card">
             <div className="category-image">
-              <img src={plumCake3} />
+              <img src={plumCake3} alt="Cupcakes" />
             </div>
             <h3>Cupcakes</h3>
             <p>Perfect bite-sized treats</p>
           </div>
         </div>
       </section>
+
       <section className="features-section">
         <div className="feature">
           <div className="feature-icon-wrapper">
@@ -137,6 +292,7 @@ const Home = () => {
           <p>Personalized cakes for your special occasions</p>
         </div>
       </section>
+
       <section className="testimonials-section">
         <div className="section-header">
           <span className="section-subtitle">What Our Customers Say</span>
@@ -164,6 +320,7 @@ const Home = () => {
           ))}
         </div>
       </section>
+
       <section className="gallery-section">
         <div className="section-header">
           <span className="section-subtitle">Contact Us On</span>

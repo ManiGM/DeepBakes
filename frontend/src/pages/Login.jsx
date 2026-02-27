@@ -115,7 +115,7 @@ const Login = () => {
               disabled={loading}
             /> */}
             <label htmlFor="username">
-              UserName/Phone Number<span className="required">*</span>
+              UserName/Phone <span className="required">*</span>
             </label>
             <input
               type="text"
