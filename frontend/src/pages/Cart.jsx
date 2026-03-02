@@ -216,7 +216,7 @@ const Cart = () => {
             </button>
           </div>
           <p className="cart-quote">
-            "A party without sweet is just a meeting." — Deep Bakes
+            A party without sweet is just a meeting — Deep Bakes
           </p>
         </div>
       </div>

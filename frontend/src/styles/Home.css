@@ -1217,7 +1217,8 @@
 
 .carousel-track {
   display: flex;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  /* transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); */
+  transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
   margin-left: 4rem;
 }
@@ -1381,7 +1382,7 @@
 .hero-image img {
   max-width: 400px;
   height: auto;
-  max-height: 300px;
+  max-height: 400px;
   /* object-fit: contain; */
   filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
 }
@@ -1389,22 +1390,61 @@
 .hero-badge {
   display: inline-flex;
   flex-direction: column;
-  background: rgba(139, 69, 19, 0.1);
-  padding: 0.5rem 1.5rem;
-  border-radius: 40px;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #8b4513;
-  margin-bottom: 1.5rem;
-  backdrop-filter: blur(5px);
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2rem;
+  font-family: "Playfair Display", serif;
+  color: #2c1810;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 182, 193, 0.35);
+  margin-bottom: 1.8rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background-image: linear-gradient(45deg, #2c1810, #2c1810);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.hero-badge:hover {
+  transform: translateY(-2px) scale(1.02);
 }
 
 .tagline {
   font-size: 0.9rem;
-  font-weight: 400;
-  color: #666;
-  margin-top: 0.2rem;
-  margin-left: 7rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  font-family: none;
+  letter-spacing: 0.4px;
+  font-style: italic;
+  background-image: linear-gradient(45deg, #8b4513, #8b4513);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* .quality-banner {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #8b4513;
+  font-style: italic;
+} */
+
+.quality-banner {
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  color: #2c1810;
+  background: rgba(255, 182, 193, 0.18);
+  border: 1px solid rgba(255, 182, 193, 0.35);
+  backdrop-filter: blur(6px);
+  text-transform: uppercase;
 }
 
 .hero-title {
