@@ -22,6 +22,7 @@ const Home = () => {
       rating: 5,
       image: "https://i.pravatar.cc/150?img=12",
     },
+
     {
       id: 2,
       name: "Poojita",
