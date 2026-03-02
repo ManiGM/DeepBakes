@@ -81,7 +81,7 @@ const MyOrders = () => {
           <div className="no-orders-icon">🍰</div>
           <h2>No orders yet</h2>
           <p>Looks like you haven't placed any orders with us yet.</p>
-          <Link to="/shop" className="btn btn-primary">
+          <Link to="/shop" className="btn btn-primary1">
             Start Shopping
           </Link>
         </div>
