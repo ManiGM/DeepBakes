@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,6 +19,7 @@ import AdminOrders from "./pages/AdminOrders";
 import MyOrders from "./pages/MyOrders";
 import ForgotPassword from "./pages/ForgetPassword";
 import "./styles/App.css";
+import API_BASE_URL from "../src/services/api";
 
 function AppContent() {
   return (
