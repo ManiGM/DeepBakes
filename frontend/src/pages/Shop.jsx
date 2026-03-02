@@ -30,7 +30,7 @@ const Shop = () => {
       product.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-    if (loading) {
+  if (loading) {
     return (
       <div className="orders-loading">
         <div className="spinner"></div>
@@ -45,7 +45,7 @@ const Shop = () => {
         className="shop-header"
         style={{ display: "flex", justifyContent: "space-between" }}
       >
-        <h1 style={{ color: "#4c1d3b" }}>Our Collection</h1>
+        <h1 style={{ color: "#4c1d3b" }}>Our Delights</h1>
         <div className="search-bar">
           <input
             type="text"

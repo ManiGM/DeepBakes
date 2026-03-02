@@ -141,7 +141,7 @@ const Home = () => {
                     <span className="hero-badge">
                       Deep Bakes
                       <span className="tagline">
-                        .....Flavour of Purity, Taste of Home
+                        Flavour of Purity, Taste of Home
                       </span>
                     </span>
 

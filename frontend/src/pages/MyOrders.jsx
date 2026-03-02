@@ -74,7 +74,7 @@ const MyOrders = () => {
   return (
     <div className="my-orders-page">
       <div className="orders-header">
-        <h1>My Orders</h1>
+        <h1>Orders</h1>
       </div>
       {orders.length === 0 ? (
         <div className="no-orders">

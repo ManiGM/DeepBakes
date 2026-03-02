@@ -1,37 +1,57 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Navbar.css";
-import  logo  from "../assets/logo.jpg"
+import logo from "../assets/logo.jpg";
 
 const Navbar = () => {
   const { user, cart, logout, isAdmin, isAuthenticated } = useAuth();
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="navbar">
       <div className="nav-brand">
         <Link to="/" className="brand-link">
-          <img src={logo} style={{width:"90px",height:"70px",borderRadius:"12px"}} />
+          <img
+            src={logo}
+            style={{ width: "90px", height: "70px", borderRadius: "12px" }}
+          />
         </Link>
       </div>
       <div className="nav-links">
-        <Link to="/shop" className="nav-link">
+        <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
+          Home
+        </Link>
+        <Link
+          to="/shop"
+          className={`nav-link ${isActive("/shop") ? "active" : ""}`}
+        >
           Shop
         </Link>
         {isAdmin && (
           <>
-            <Link to="/add-product" className="nav-link">
-              Add Product
+            <Link
+              to="/add-product"
+              className={`nav-link ${isActive("/add-product") ? "active" : ""}`}
+            >
+              Add Delight
             </Link>
-            <Link to="/admin-orders" className="nav-link">
+            <Link
+              to="/admin-orders"
+              className={`nav-link ${isActive("/admin-orders") ? "active" : ""}`}
+            >
               Manage Orders
             </Link>
           </>
         )}
         {isAuthenticated && !isAdmin && (
-          <Link to="/my-orders" className="nav-link">
-            My Orders
+          <Link
+            to="/my-orders"
+            className={`nav-link ${isActive("/my-orders") ? "active" : ""}`}
+          >
+            Orders
           </Link>
         )}
       </div>
@@ -39,7 +59,10 @@ const Navbar = () => {
         {isAuthenticated ? (
           <>
             {!isAdmin && (
-              <Link to="/cart" className="cart-link">
+              <Link
+                to="/cart"
+                className={`cart-link ${isActive("/cart") ? "active" : ""}`}
+              >
                 <ShoppingCart size={20} />
                 {cartItemCount > 0 && (
                   <span className="cart-badge">{cartItemCount}</span>
