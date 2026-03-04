@@ -91,12 +91,16 @@ const Order = mongoose.model("Order", OrderSchema);
 
 const transporter = nodemailer.createTransport({
   host: "74.125.130.108",
-  port: 587,
-  secure: false,
+  // port: 587,
+  // secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  connectionTimeout: 20000, // Give it 20 seconds to connect
+  greetingTimeout: 20000,
   tls: {
     servername: "smtp.gmail.com",
     rejectUnauthorized: false,
