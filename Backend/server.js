@@ -103,16 +103,17 @@ const Order = mongoose.model("Order", OrderSchema);
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false,
+  secure: false, // Use STARTTLS
+  family: 4, // <--- ADD THIS LINE (Forces IPv4)
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
     rejectUnauthorized: false,
+    minVersion: "TLSv1.2", // Optional: ensures modern security
   },
 });
-
 transporter.verify((error, success) => {
   if (error) {
     console.error("Email server error:", error);
