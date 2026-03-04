@@ -80,17 +80,6 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   pool: true,
-//   maxConnections: 1,
-//   maxMessages: 50,
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -178,27 +167,59 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/check-user", async (req, res) => {
-  const user = await User.findOne({ phone: req.body.phone });
-  res.json({ exists: !!user });
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      return res.status(400).json({ message: "Phone is required" });
+    }
+    const user = await User.findOne({ phone });
+    res.json({ exists: !!user });
+  } catch (error) {
+    console.error("Check user error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 app.post("/reset-password", async (req, res) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  await User.findOneAndUpdate(
-    { phone: req.body.phone },
-    { password: hashedPassword },
-  );
-  res.json({ message: "Password Updated" });
+  try {
+    const { phone, password } = req.body;
+    if (!phone || !password) {
+      return res.status(400).json({ message: "Phone and password required" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updatedUser = await User.findOneAndUpdate(
+      { phone },
+      { password: hashedPassword },
+    );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "Password Updated" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 app.get("/products", async (req, res) => {
-  res.json(await Product.find().lean());
+  try {
+    const products = await Product.find().lean();
+    res.json(products);
+  } catch (error) {
+    console.error("Fetch products error:", error);
+    res.status(500).json({ message: "Failed to fetch products" });
+  }
 });
 
 app.post("/products", async (req, res) => {
-  const prod = new Product(req.body);
-  await prod.save();
-  res.json("Saved");
+  try {
+    const prod = new Product(req.body);
+    await prod.save();
+    res.status(201).json({ message: "Product saved" });
+  } catch (error) {
+    console.error("Create product error:", error);
+    res.status(500).json({ message: "Failed to create product" });
+  }
 });
 
 app.delete("/products/:id", async (req, res) => {
@@ -312,11 +333,23 @@ app.post("/orders", async (req, res) => {
 });
 
 app.get("/orders", async (req, res) => {
-  res.json(await Order.find().lean());
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 }).lean();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch orders" });
+  }
 });
 
 app.get("/orders/:userId", async (req, res) => {
-  res.json(await Order.find({ userId: req.params.userId }).lean());
+  try {
+    const orders = await Order.find({ userId: req.params.userId })
+      .sort({ createdAt: -1 })
+      .lean();
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user orders" });
+  }
 });
 
 app.put("/orders/:id", async (req, res) => {
