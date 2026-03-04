@@ -89,31 +89,20 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 465,
-//   secure: true,
-//   family: 4,
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "74.125.130.108",
   port: 587,
-  secure: false, // Use STARTTLS
-  family: 4, // <--- ADD THIS LINE (Forces IPv4)
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
+    servername: "smtp.gmail.com",
     rejectUnauthorized: false,
-    minVersion: "TLSv1.2", // Optional: ensures modern security
   },
 });
+
 transporter.verify((error, success) => {
   if (error) {
     console.error("Email server error:", error);
