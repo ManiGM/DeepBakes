@@ -41,9 +41,45 @@ const ProductCard = ({ product, onDeleteSuccess }) => {
       <div className="product-details">
         <h3 className="product-name">{product.name}</h3>
         <p className="product-description">{product.description}</p>
-        <div className="product-price">
-          <span>&#8377;</span>
-          {Number(product.price || 0).toFixed(2)}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "8px",
+            marginTop: "8px",
+            marginBottom: "0px",
+          }}
+        >
+          <div className="product-price">
+            <span>&#8377;</span>
+            {Number(product.price || 0).toFixed(2)}
+          </div>
+          {!isAdmin && (
+            <div className="product-actions">
+              {!cartItem ? (
+                <button className="btn btn-primary1" onClick={handleAddToCart}>
+                  Add to Cart
+                </button>
+              ) : (
+                <div className="quantity-controls">
+                  <button
+                    className="qty-btn"
+                    onClick={() => handleQuantityChange(-1)}
+                  >
+                    −
+                  </button>
+                  <span className="qty-display">{cartItem.quantity}</span>
+                  <button
+                    className="qty-btn"
+                    onClick={() => handleQuantityChange(1)}
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         {isAdmin && (
           <>
@@ -81,32 +117,6 @@ const ProductCard = ({ product, onDeleteSuccess }) => {
               {deleting ? "Deleting..." : "❌"}
             </button>
           </>
-        )}
-        {!isAdmin && (
-          <div className="product-actions">
-            {!cartItem ? (
-              <button className="btn btn-primary1" onClick={handleAddToCart}>
-                Add to Cart
-              </button>
-            ) : (
-              <div className="quantity-controls">
-                <button
-                  className="qty-btn"
-                  onClick={() => handleQuantityChange(-1)}
-                  disabled={cartItem.quantity <= 1}
-                >
-                  −
-                </button>
-                <span className="qty-display">{cartItem.quantity}</span>
-                <button
-                  className="qty-btn"
-                  onClick={() => handleQuantityChange(1)}
-                >
-                  +
-                </button>
-              </div>
-            )}
-          </div>
         )}
       </div>
     </div>

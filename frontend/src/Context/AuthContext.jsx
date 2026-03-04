@@ -53,13 +53,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateCartQuantity = (productId, delta) => {
-    setCart((prev) =>
-      prev.map((item) =>
+    setCart((prev) => {
+      const item = prev.find((i) => i._id === productId);
+      if (item && item.quantity === 1 && delta === -1) {
+        toast.success("Removed from cart");
+        return prev.filter((i) => i._id !== productId);
+      }
+      return prev.map((item) =>
         item._id === productId
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+          ? { ...item, quantity: item.quantity + delta }
           : item,
-      ),
-    );
+      );
+    });
   };
 
   const removeFromCart = (productId) => {

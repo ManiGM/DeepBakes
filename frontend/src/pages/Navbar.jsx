@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, User, LogOut } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Navbar.css";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/deepbakes.png";
 
 const Navbar = () => {
   const { user, cart, logout, isAdmin, isAuthenticated } = useAuth();
