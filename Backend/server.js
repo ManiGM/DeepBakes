@@ -106,28 +106,47 @@ const Order = mongoose.model("Order", OrderSchema);
 //   },
 // });
 
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   pool: true, // Port 465 requires secure: true
+//   // This custom lookup forces IPv4 at the DNS level for this specific connection
+//   lookup: (hostname, options, callback) => {
+//     dns.lookup(hostname, { family: 4 }, (err, address, family) => {
+//       callback(err, address, family);
+//     });
+//   },
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS, // Verify NO SPACES in Render Dashboard
+//   },
+//   connectionTimeout: 60000, // 60 seconds
+//   greetingTimeout: 60000,
+//   socketTimeout: 60000,
+//   tls: {
+//     servername: "smtp.gmail.com",
+//     rejectUnauthorized: false,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  // Direct IPv4 for smtp.gmail.com (skips DNS resolution)
+  host: "74.125.136.108",
   port: 465,
   secure: true,
-  pool: true, // Port 465 requires secure: true
-  // This custom lookup forces IPv4 at the DNS level for this specific connection
-  lookup: (hostname, options, callback) => {
-    dns.lookup(hostname, { family: 4 }, (err, address, family) => {
-      callback(err, address, family);
-    });
-  },
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Verify NO SPACES in Render Dashboard
+    pass: process.env.EMAIL_PASS, // NO SPACES in Render Dashboard
   },
-  connectionTimeout: 60000, // 60 seconds
-  greetingTimeout: 60000,
-  socketTimeout: 60000,
   tls: {
+    // CRITICAL: Tells Google we are still 'smtp.gmail.com'
+    // despite using an IP to connect
     servername: "smtp.gmail.com",
     rejectUnauthorized: false,
   },
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
 });
 
 transporter.verify((error, success) => {
