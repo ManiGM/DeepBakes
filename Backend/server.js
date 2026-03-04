@@ -109,7 +109,8 @@ const Order = mongoose.model("Order", OrderSchema);
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // Port 465 requires secure: true
+  secure: true,
+  pool: true, // Port 465 requires secure: true
   // This custom lookup forces IPv4 at the DNS level for this specific connection
   lookup: (hostname, options, callback) => {
     dns.lookup(hostname, { family: 4 }, (err, address, family) => {
