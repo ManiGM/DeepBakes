@@ -106,8 +106,6 @@ const Order = mongoose.model("Order", OrderSchema);
 //   },
 // });
 
-const dns = require("dns"); // Ensure this is at the top of your file
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
