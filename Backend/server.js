@@ -131,24 +131,25 @@ const Order = mongoose.model("Order", OrderSchema);
 // });
 
 const transporter = nodemailer.createTransport({
-  // Direct IPv4 for smtp.gmail.com (skips DNS resolution)
-  host: "74.125.136.108",
-  port: 465,
-  secure: true,
+  host: "smtp.gmail.com",
+  port: 465, // Port 465 is more stable on cloud firewalls
+  secure: true, // Required for 465
+  pool: true, // IMPORTANT: Keeps the connection alive
+  maxConnections: 5, // Limits simultaneous connections
+  maxMessages: 100, // Rotates connections after 100 emails
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS, // NO SPACES in Render Dashboard
   },
+  // High timeouts to handle Render's "cold starts"
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
   tls: {
-    // CRITICAL: Tells Google we are still 'smtp.gmail.com'
-    // despite using an IP to connect
     servername: "smtp.gmail.com",
     rejectUnauthorized: false,
   },
-  connectionTimeout: 60000,
-  greetingTimeout: 60000,
 });
-
 transporter.verify((error, success) => {
   if (error) {
     console.error("Email server error:", error);
