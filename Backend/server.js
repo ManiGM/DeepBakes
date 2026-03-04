@@ -108,20 +108,22 @@ const Order = mongoose.model("Order", OrderSchema);
 // });
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465, // 465 is much more stable on Render
-  secure: true, // true for 465, false for 587
-  family: 4, // MUST keep this to avoid the IPv6 ENETUNREACH error
+  // Use the direct IPv4 address for smtp.gmail.com to skip DNS resolution
+  host: "74.125.130.108",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Ensure spaces are removed in Render Dashboard
+    pass: process.env.EMAIL_PASS, // Ensure NO SPACES in Render dashboard
   },
-  connectionTimeout: 30000, // Wait 20s for the initial connection
-  greetingTimeout: 30000, // Wait 20s for Gmail's "Hello"
-  socketTimeout: 40000, // Wait 30s for data transfer
   tls: {
-    rejectUnauthorized: false, // Prevents certificate handshake issues
+    // This is the CRITICAL line: it tells Gmail we are still 'smtp.gmail.com'
+    // even though we connected via an IP address.
+    servername: "smtp.gmail.com",
+    rejectUnauthorized: false,
   },
+  connectionTimeout: 40000,
+  greetingTimeout: 40000,
 });
 
 transporter.verify((error, success) => {
