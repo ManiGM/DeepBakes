@@ -88,81 +88,34 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
-const originalLookup = dns.lookup;
-dns.lookup = (hostname, options, callback) => {
-  if (typeof options === "function") {
-    callback = options;
-    options = { family: 4 };
-  } else {
-    options.family = 4;
-  }
-  return originalLookup(hostname, options, callback);
-};
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587, // Changed from 465 to 587 (more reliable on Render)
-  secure: false, // false for port 587
-  requireTLS: true, // Force TLS
-  pool: true,
-  maxConnections: 3, // Reduced for free tier
-  maxMessages: 50, // Reduced for free tier
+  port: 465, // Port 465 is more stable on cloud firewalls
+  secure: true, // Required for 465
+  pool: true, // IMPORTANT: Keeps the connection alive
+  maxConnections: 5, // Limits simultaneous connections
+  maxMessages: 100, // Rotates connections after 100 emails
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS, // NO SPACES in Render Dashboard
   },
-  // Reduced timeouts for faster failure detection
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
+  // High timeouts to handle Render's "cold starts"
+  connectionTimeout: 60000,
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
   tls: {
     servername: "smtp.gmail.com",
-    rejectUnauthorized: false, // Keep this for Render
+    rejectUnauthorized: false,
   },
-  // Debug in development
-  debug: process.env.NODE_ENV === "development",
 });
 
 transporter.verify((error, success) => {
   if (error) {
-    console.error("❌ Email server error:", error.message);
-    console.log("Trying fallback configuration...");
-
-    // Fallback with different settings if primary fails
-    tryFallbackConnection();
+    console.error("Email server error:", error);
   } else {
-    console.log("✅ Email Server Ready on smtp.gmail.com:587");
+    console.log("Email Server Ready");
   }
 });
-
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 465, // Port 465 is more stable on cloud firewalls
-//   secure: true, // Required for 465
-//   pool: true, // IMPORTANT: Keeps the connection alive
-//   maxConnections: 5, // Limits simultaneous connections
-//   maxMessages: 100, // Rotates connections after 100 emails
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS, // NO SPACES in Render Dashboard
-//   },
-//   // High timeouts to handle Render's "cold starts"
-//   connectionTimeout: 60000,
-//   greetingTimeout: 60000,
-//   socketTimeout: 60000,
-//   tls: {
-//     servername: "smtp.gmail.com",
-//     rejectUnauthorized: false,
-//   },
-// });
-
-// transporter.verify((error, success) => {
-//   if (error) {
-//     console.error("Email server error:", error);
-//   } else {
-//     console.log("Email Server Ready");
-//   }
-// });
 
 app.use((req, res, next) => {
   if (req.method === "GET") {
