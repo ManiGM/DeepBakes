@@ -89,21 +89,38 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
+// const transporter = nodemailer.createTransport({
+//   host: "74.125.130.108",
+//   // port: 587,
+//   // secure: false,
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+//   connectionTimeout: 20000, // Give it 20 seconds to connect
+//   greetingTimeout: 20000,
+//   tls: {
+//     servername: "smtp.gmail.com",
+//     rejectUnauthorized: false,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  host: "74.125.130.108",
-  // port: 587,
-  // secure: false,
-  port: 465,
-  secure: true,
+  host: "smtp.gmail.com",
+  port: 465, // 465 is much more stable on Render
+  secure: true, // true for 465, false for 587
+  family: 4, // MUST keep this to avoid the IPv6 ENETUNREACH error
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS, // Ensure spaces are removed in Render Dashboard
   },
-  connectionTimeout: 20000, // Give it 20 seconds to connect
-  greetingTimeout: 20000,
+  connectionTimeout: 30000, // Wait 20s for the initial connection
+  greetingTimeout: 30000, // Wait 20s for Gmail's "Hello"
+  socketTimeout: 40000, // Wait 30s for data transfer
   tls: {
-    servername: "smtp.gmail.com",
-    rejectUnauthorized: false,
+    rejectUnauthorized: false, // Prevents certificate handshake issues
   },
 });
 
