@@ -78,15 +78,33 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   pool: true,
+//   maxConnections: 1,
+//   maxMessages: 50,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  pool: true,
-  maxConnections: 1,
-  maxMessages: 50,
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("Email server error:", error);
+  } else {
+    console.log("Email Server Ready");
+  }
 });
 
 app.use((req, res, next) => {
@@ -186,6 +204,24 @@ app.delete("/products/:id", async (req, res) => {
     res.json({ message: "Product Deleted" });
   } catch (error) {
     res.status(500).json({ error: "Delete Failed" });
+  }
+});
+
+app.get("/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).lean();
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: "Fetch Failed" });
+  }
+});
+
+app.put("/products/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json({ message: "Product Updated" });
+  } catch (error) {
+    res.status(500).json({ error: "Update Failed" });
   }
 });
 

@@ -1,11 +1,15 @@
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Shop.css";
 import { productApi } from "../services/api";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
-  const { user, addToCart, updateCartQuantity, cart, isAdmin } = useAuth();
-
+const ProductCard = ({ product, onDeleteSuccess }) => {
+  const { addToCart, updateCartQuantity, cart, isAdmin } = useAuth();
   const cartItem = cart.find((item) => item._id === product._id);
+  // const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -17,10 +21,15 @@ const ProductCard = ({ product }) => {
 
   const onDelete = async (id) => {
     try {
+      setDeleting(true);
       await productApi.delete(id);
-      window.location.reload();
+      if (onDeleteSuccess) {
+        onDeleteSuccess(id);
+      }
     } catch (error) {
       console.error("Delete failed:", error);
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -37,23 +46,41 @@ const ProductCard = ({ product }) => {
           {Number(product.price || 0).toFixed(2)}
         </div>
         {isAdmin && (
-          <button
-            onClick={() => onDelete(product._id)}
-            aria-label="Delete product"
-            style={{
-              position: "absolute",
-              top: "8px",
-              right: "8px",
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: "14px",
-              color: "#540505",
-              padding: "4px",
-            }}
-          >
-            ❌
-          </button>
+          <>
+            <button
+              onClick={() => navigate(`/add-product/${product._id}`)}
+              style={{
+                position: "absolute",
+                top: "8px",
+                right: "35px",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: "14px",
+                padding: "4px",
+                color: "#007bff",
+              }}
+            >
+              ✏️
+            </button>
+            <button
+              onClick={() => onDelete(product._id)}
+              disabled={deleting}
+              style={{
+                position: "absolute",
+                top: "8px",
+                right: "8px",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: "14px",
+                color: "#540505",
+                padding: "4px",
+              }}
+            >
+              {deleting ? "Deleting..." : "❌"}
+            </button>
+          </>
         )}
         {!isAdmin && (
           <div className="product-actions">

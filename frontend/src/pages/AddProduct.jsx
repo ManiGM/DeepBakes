@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { productApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/AddProduct.css";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,8 @@ const AddProduct = () => {
     category: "cake",
     inStock: true,
   });
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -24,6 +28,29 @@ const AddProduct = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+
+  useEffect(() => {
+    if (id) {
+      const fetchProduct = async () => {
+        try {
+          setLoading(true);
+          const res = await productApi.getById(id);
+          setFormData({
+            name: res.data.name,
+            price: res.data.price,
+            description: res.data.description,
+            image: res.data.image,
+          });
+          setImagePreview(res.data.image);
+        } catch (error) {
+          toast.error("Failed to load product");
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProduct();
+    }
+  }, [id]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -53,33 +80,37 @@ const AddProduct = () => {
       !formData.name ||
       !formData.price ||
       !formData.description ||
-      !formData.image
+      (!formData.image && !isEditMode)
     ) {
       toast.error("Please fill all fields");
       return;
     }
-    if (formData.price <= 0) {
-      toast.error("Price must be greater than 0");
-      return;
-    }
     try {
       setLoading(true);
-      await productApi.create({
-        name: formData.name,
-        price: Number(formData.price),
-        description: formData.description,
-        image: formData.image,
-      });
-      toast.success("Product added successfully 🎂");
+      if (id) {
+        await productApi.update(id, {
+          name: formData.name,
+          price: Number(formData.price),
+          description: formData.description,
+          image: formData.image,
+        });
+        toast.success("Product updated successfully 🎂");
+      } else {
+        await productApi.create({
+          name: formData.name,
+          price: Number(formData.price),
+          description: formData.description,
+          image: formData.image,
+        });
+        toast.success("Product added successfully 🎂");
+      }
       navigate("/shop");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to add product");
+      toast.error("Operation failed");
     } finally {
       setLoading(false);
     }
   };
-
   if (loading) {
     return (
       <div className="orders-loading">
@@ -92,7 +123,7 @@ const AddProduct = () => {
   return (
     <div className="admin-container">
       <div className="admin-card">
-        <h1>Add New Delight</h1>
+        <h1>{id ? "Edit Delight" : "Add New Delight"}</h1>
         <form onSubmit={handleSubmit} className="admin-form">
           <div className="form-group2">
             <label htmlFor="name">
@@ -161,7 +192,7 @@ const AddProduct = () => {
           </div>
           <div className="form-group2">
             <label htmlFor="image">
-              Product Image <span className="required">*</span>
+              Product Image {!isEditMode && <span className="required">*</span>}
             </label>
             <div className="image-upload-area2">
               <input
@@ -171,7 +202,7 @@ const AddProduct = () => {
                 onChange={handleImageChange}
                 accept="image/*"
                 className="file-input"
-                required
+                required={!isEditMode}
               />
               {imagePreview && (
                 <div className="image-preview">
@@ -208,7 +239,7 @@ const AddProduct = () => {
               className="btn btn-primary1"
               disabled={loading}
             >
-              {loading ? "Adding Product..." : "Add Product"}
+              {isEditMode ? "Update Product" : "Add Product"}
             </button>
           </div>
         </form>

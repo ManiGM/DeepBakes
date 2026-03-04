@@ -63,7 +63,13 @@ const Shop = () => {
       ) : (
         <div className="products-grid">
           {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard
+              key={product._id}
+              product={product}
+              onDeleteSuccess={(id) =>
+                setProducts((prev) => prev.filter((p) => p._id !== id))
+              }
+            />
           ))}
         </div>
       )}

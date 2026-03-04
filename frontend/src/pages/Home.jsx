@@ -234,10 +234,10 @@ const Home = () => {
             </div>
             <div className="category-card">
               <div className="category-image">
-                <img src={Apricot} alt="Cookies" />
+                <img src={Brownie} alt="Brownie" />
               </div>
-              <h3>Apricot Delight</h3>
-              <p>Decadent and indulgent</p>
+              <h3>Brownies</h3>
+              <p>Dense • Gooey • Chocolate Loaded</p>
             </div>
             <div className="category-card">
               <div className="category-image">
@@ -254,15 +254,14 @@ const Home = () => {
               <p>Perfect bite-sized treats</p>
             </div>
           </div>
-          <div className="category-card" style={{ marginTop: "30px" }}>
+          {/* <div className="category-card" style={{ marginTop: "30px" }}>
             <div className="category-image">
               <img src={Brownie} alt="Malai Toast" />
             </div>
             <h3>Brownies</h3>
             <p>Dense • Gooey • Chocolate Loaded</p>
-          </div>
+          </div> */}
         </section>
-
         <section className="features-section">
           <div className="feature">
             <div className="feature-icon-wrapper">

@@ -41,7 +41,7 @@ function AppContent() {
             }
           />
           <Route
-            path="/add-product"
+            path="/add-product/:id?"
             element={
               <ProtectedRoute adminOnly>
                 <AddProduct />
@@ -73,10 +73,7 @@ function AppContent() {
 
 function App() {
   useEffect(() => {
-    const wakeServer = () => fetch(`${API_BASE_URL}/health`).catch(() => {});
-    wakeServer();
-    const interval = setInterval(wakeServer, 2 * 60 * 1000);
-    return () => clearInterval(interval);
+    fetch(`${API_BASE_URL}/health`).catch(() => {});
   }, []);
 
   return (
