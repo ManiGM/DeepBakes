@@ -1,10 +1,9 @@
 require("dotenv").config();
-
+const dns = require("dns");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
-const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
@@ -107,23 +106,29 @@ const Order = mongoose.model("Order", OrderSchema);
 //   },
 // });
 
+const dns = require("dns"); // Ensure this is at the top of your file
+
 const transporter = nodemailer.createTransport({
-  // Use the direct IPv4 address for smtp.gmail.com to skip DNS resolution
-  host: "74.125.130.108",
+  host: "smtp.gmail.com",
   port: 465,
-  secure: true,
+  secure: true, // Port 465 requires secure: true
+  // This custom lookup forces IPv4 at the DNS level for this specific connection
+  lookup: (hostname, options, callback) => {
+    dns.lookup(hostname, { family: 4 }, (err, address, family) => {
+      callback(err, address, family);
+    });
+  },
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // Ensure NO SPACES in Render dashboard
+    pass: process.env.EMAIL_PASS, // Verify NO SPACES in Render Dashboard
   },
+  connectionTimeout: 60000, // 60 seconds
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
   tls: {
-    // This is the CRITICAL line: it tells Gmail we are still 'smtp.gmail.com'
-    // even though we connected via an IP address.
     servername: "smtp.gmail.com",
     rejectUnauthorized: false,
   },
-  connectionTimeout: 40000,
-  greetingTimeout: 40000,
 });
 
 transporter.verify((error, success) => {
