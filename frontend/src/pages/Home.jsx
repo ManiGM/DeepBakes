@@ -107,16 +107,26 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ marginLeft: "40%", marginTop: "1%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "1%",
+        }}
+      >
         <span className="hero-badge">
           Deep Bakes
           <span className="tagline">Flavour of Purity, Taste of Home</span>
         </span>
       </div>
       <div
-        style={{ marginLeft: "38.5%", marginTop: "-1%", marginBottom: "1%" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "-1%",
+          marginBottom: "1%",
+        }}
       >
-        {" "}
         <span className="quality-banner">
           No Maida • No Sugar • No Preservatives • Eggless
         </span>

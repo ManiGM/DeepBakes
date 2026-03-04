@@ -138,31 +138,31 @@ const AdminOrders = () => {
       </div>
       <div className="filters-bar">
         <button
-          className={`filter-btn  ₹{filter === "all" ? "active" : ""}`}
+          className={`filter-btn  ${filter === "all" ? "active" : ""}`}
           onClick={() => setFilter("all")}
         >
           All Orders
         </button>
         <button
-          className={`filter-btn  ₹{filter === "pending" ? "active" : ""}`}
+          className={`filter-btn  ${filter === "pending" ? "active" : ""}`}
           onClick={() => setFilter("pending")}
         >
           Pending
         </button>
         <button
-          className={`filter-btn  ₹{filter === "accepted" ? "active" : ""}`}
+          className={`filter-btn  ${filter === "accepted" ? "active" : ""}`}
           onClick={() => setFilter("accepted")}
         >
           Accepted
         </button>
         <button
-          className={`filter-btn  ₹{filter === "delivered" ? "active" : ""}`}
+          className={`filter-btn  ${filter === "delivered" ? "active" : ""}`}
           onClick={() => setFilter("delivered")}
         >
           Delivered
         </button>
         <button
-          className={`filter-btn  ₹{filter === "rejected" ? "active" : ""}`}
+          className={`filter-btn  ${filter === "rejected" ? "active" : ""}`}
           onClick={() => setFilter("rejected")}
         >
           Rejected

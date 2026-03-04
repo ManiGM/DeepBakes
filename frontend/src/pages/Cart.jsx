@@ -59,13 +59,18 @@ const Cart = () => {
         deliveryFee,
         total,
       };
-      await orderApi.create(orderData);
-      toast.success("Order placed successfully! 🎂");
-      clearCart();
-      navigate("/my-orders", { state: orderData });
+      const response = await orderApi.create(orderData);
+      if (response?.status === 200) {
+        toast.success("Order placed successfully! 🎂");
+        clearCart();
+        setLoading(false);
+        navigate("/my-orders");
+      } else {
+        throw new Error("Order failed");
+      }
     } catch (error) {
       console.error("Order failed:", error);
-    } finally {
+      toast.error("Order failed. Please try again.");
       setLoading(false);
     }
   };

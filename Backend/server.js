@@ -11,10 +11,19 @@ const nodemailer = require("nodemailer");
 const app = express();
 app.set("trust proxy", 1);
 const compression = require("compression");
-app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(compression());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://deepbakes.vercel.app",
+      "https://deepbakes.netlify.app",
+    ],
+    credentials: true,
+  }),
+);
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
@@ -80,14 +89,27 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   family: 4,
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
@@ -253,11 +275,16 @@ app.post("/orders", async (req, res) => {
   try {
     const order = new Order(req.body);
     await order.save();
-    await transporter.sendMail({
-      from: `"DeepBakes Orders" <${process.env.EMAIL_USER}>`,
-      to: process.env.OWNER_EMAIL,
-      subject: `🆕 New Order Received — ${order.userName}`,
-      html: `
+    // ✅ SEND RESPONSE FIRST (important for production)
+    res.status(200).json("Ordered");
+    // ✅ SEND EMAILS IN BACKGROUND (do not block API)
+    setImmediate(async () => {
+      try {
+        await transporter.sendMail({
+          from: `"DeepBakes Orders" <${process.env.EMAIL_USER}>`,
+          to: process.env.OWNER_EMAIL,
+          subject: `🆕 New Order Received — ${order.userName}`,
+          html: `
     <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px;">
       
@@ -289,12 +316,12 @@ app.post("/orders", async (req, res) => {
     </div>
   </div>
   `,
-    });
-    await transporter.sendMail({
-      from: `"DeepBakes" <${process.env.EMAIL_USER}>`,
-      to: order.email,
-      subject: "✅ Order Confirmed — DeepBakes",
-      html: `
+        });
+        await transporter.sendMail({
+          from: `"DeepBakes" <${process.env.EMAIL_USER}>`,
+          to: order.email,
+          subject: "✅ Order Confirmed — DeepBakes",
+          html: `
   <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px;">
 
@@ -324,8 +351,12 @@ app.post("/orders", async (req, res) => {
     </div>
   </div>
   `,
+        });
+        console.log("Order emails sent successfully");
+      } catch (emailError) {
+        console.error("Email sending failed:", emailError);
+      }
     });
-    res.json("Ordered");
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Order Failed" });
@@ -359,12 +390,17 @@ app.put("/orders/:id", async (req, res) => {
       { status: req.body.status },
       { new: true },
     );
-    if (order.email) {
-      await transporter.sendMail({
-        from: `"DeepBakes" <${process.env.EMAIL_USER}>`,
-        to: order.email,
-        subject: `Order ${order.status} — DeepBakes`,
-        html: `
+    // ✅ SEND RESPONSE FIRST (important)
+    res.status(200).json("Updated");
+    // ✅ SEND EMAIL IN BACKGROUND (non-blocking)
+    if (order?.email) {
+      setImmediate(async () => {
+        try {
+          await transporter.sendMail({
+            from: `"DeepBakes" <${process.env.EMAIL_USER}>`,
+            to: order.email,
+            subject: `Order ${order.status} — DeepBakes`,
+            html: `
     <div style="font-family: Arial, sans-serif; background:#f5f7fa; padding:20px;">
     <div style="max-width:600px; margin:auto; background:white; border-radius:8px; padding:30px;">
 
@@ -415,10 +451,13 @@ app.put("/orders/:id", async (req, res) => {
     </div>
   </div>
   `,
+          });
+          console.log("Status email sent successfully");
+        } catch (emailError) {
+          console.error("Status email failed:", emailError);
+        }
       });
-    } else {
     }
-    res.json("Updated");
   } catch (error) {
     console.error("Status update error:", error);
     res.status(500).json({ message: "Update Failed" });
