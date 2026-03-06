@@ -111,8 +111,8 @@ const AdminOrders = () => {
   return (
     <div className="admin-orders-page">
       <div className="admin-header">
-        <h1>Manage Orders</h1>
-        <p>Track and update customer orders</p>
+        {/* <h1>Manage Orders</h1> */}
+        <h2>Track & Update Customer Orders</h2>
       </div>
       <div className="stats-grid">
         <div className="stat-card">

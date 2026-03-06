@@ -16,9 +16,9 @@ const Home = () => {
   const testimonials = [
     {
       id: 1,
-      name: "Sai Jayanth",
+      name: "Mani",
       comment:
-        "The best plum cake I've ever tasted! Perfect for our Christmas party.",
+        "Fresh, delicious, and delivered on time. My new favorite bakery!",
       rating: 5,
       image: "https://i.pravatar.cc/150?img=12",
     },
@@ -34,7 +34,7 @@ const Home = () => {
       id: 3,
       name: "Srivalli",
       comment:
-        "Fresh, delicious, and delivered on time. My new favorite bakery!",
+        "The best plum cake I've ever tasted! Perfect for our Christmas party.",
       rating: 5,
       image: "https://i.pravatar.cc/150?img=41",
     },

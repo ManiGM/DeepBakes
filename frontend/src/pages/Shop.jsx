@@ -6,7 +6,7 @@ import "../styles/Shop.css";
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetchProducts();
@@ -24,12 +24,12 @@ const Shop = () => {
     }
   };
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
+  const filteredProducts =
+    filter === "all"
+      ? products
+      : products.filter((product) =>
+          product.name.toLowerCase().includes(filter.toLowerCase()),
+        );
   if (loading) {
     return (
       <div className="orders-loading">
@@ -45,15 +45,62 @@ const Shop = () => {
         className="shop-header"
         style={{ display: "flex", justifyContent: "space-between" }}
       >
-        <h1 style={{ color: "#4c1d3b" }}>Our Delights</h1>
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search cakes, pastries..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
+        {/* <h1 style={{ color: "#4c1d3b" }}>Our Delights</h1> */}
+        <div className="filters-bar">
+          <button
+            className={`filter-btn ${filter === "all" ? "active" : ""}`}
+            onClick={() => setFilter("all")}
+          >
+            All
+          </button>
+          <button
+            className={`filter-btn  ${filter === "cookies" ? "active" : ""}`}
+            onClick={() => setFilter("cookies")}
+          >
+            Cookies
+          </button>
+          <button
+            className={`filter-btn  ${filter === "cupcakes" ? "active" : ""}`}
+            onClick={() => setFilter("cupcakes")}
+          >
+            Cup Cakes
+          </button>
+          <button
+            className={`filter-btn  ${filter === "brownies" ? "active" : ""}`}
+            onClick={() => setFilter("brownies")}
+          >
+            Brownies
+          </button>
+          <button
+            className={`filter-btn  ${filter === "doughnuts" ? "active" : ""}`}
+            onClick={() => setFilter("doughnuts")}
+          >
+            Doughnuts
+          </button>
+          <button
+            className={`filter-btn  ${filter === "chocolates" ? "active" : ""}`}
+            onClick={() => setFilter("chocolates")}
+          >
+            Chocolates
+          </button>
+          <button
+            className={`filter-btn  ${filter === "bomboloni" ? "active" : ""}`}
+            onClick={() => setFilter("bomboloni")}
+          >
+            Bomboloni
+          </button>
+          <button
+            className={`filter-btn  ${filter === "crackers" ? "active" : ""}`}
+            onClick={() => setFilter("crackers")}
+          >
+            Crackers
+          </button>
+          <button
+            className={`filter-btn  ${filter === "malaiToast" ? "active" : ""}`}
+            onClick={() => setFilter("malaiToast")}
+          >
+            Malai Toast
+          </button>
         </div>
       </div>
       {filteredProducts.length === 0 ? (
