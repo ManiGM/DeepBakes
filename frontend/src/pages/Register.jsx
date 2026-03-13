@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Forms.css";
-import login_bg from "../assets/login_bg.jpg"
+import login_bg from "../assets/login_bg.jpg";
+import { encryptPassword } from "../services/api";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -26,27 +27,27 @@ const Register = () => {
     </svg>
   );
 
- const EyeClosed = () => (
-   <svg
-     width="20"
-     height="20"
-     viewBox="0 0 24 24"
-     fill="none"
-     stroke="currentColor"
-     strokeWidth="2"
-     strokeLinecap="round"
-     strokeLinejoin="round"
-   >
-     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
-     <line x1="2" y1="2" x2="22" y2="22" />
-   </svg>
- );
+  const EyeClosed = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
+      <line x1="2" y1="2" x2="22" y2="22" />
+    </svg>
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "phone") {
       let cleanedValue = value.replace(/\D/g, "");
-     if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
+      if (cleanedValue.length === 1 && !/^[6-9]$/.test(cleanedValue)) {
         cleanedValue = "";
       }
       if (cleanedValue.length > 1 && !/^[6-9]/.test(cleanedValue)) {
@@ -125,8 +126,15 @@ const Register = () => {
     }
     try {
       setLoading(true);
-      const { confirmPassword, ...userData } = formData;
-      userData.phone = formData.phone;
+      const encryptedPassword = encryptPassword(formData.password);
+      const { confirmPassword, password, ...rest } = formData;
+      const userData = {
+        ...rest,
+        phone: formData.phone,
+        password: encryptedPassword,
+      };
+      // const { confirmPassword, ...userData } = formData;
+      // userData.phone = formData.phone;
       const response = await authApi.register(userData);
       if (response.data?.success) {
         toast.success("Registration successful! Please login.");
@@ -149,7 +157,10 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container"  style={{ backgroundImage: `url(${login_bg})` }}>
+    <div
+      className="auth-container"
+      style={{ backgroundImage: `url(${login_bg})` }}
+    >
       <div className="auth-card">
         <h1>Join Deep Bakes</h1>
         {errors.form && (
@@ -273,7 +284,6 @@ const Register = () => {
           <button
             type="submit"
             className="btn btn-primary btn-block1"
-           
             disabled={loading}
           >
             {loading ? (

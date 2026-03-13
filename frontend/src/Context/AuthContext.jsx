@@ -39,16 +39,16 @@ export const AuthProvider = ({ children }) => {
     localStorage.clear();
     setUser(null);
     setCart([]);
-    toast.success("Logged out successfully");
+    toast.success("Signing Off");
   };
 
   const addToCart = (product) => {
     if (!user) {
-      toast.error("Please login first");
+      toast.error("Please Login First");
       return false;
     }
     setCart((prev) => [...prev, { ...product, quantity: 1 }]);
-    toast.success("Added to cart!");
+    toast.success("Added To Cart!");
     return true;
   };
 
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     setCart((prev) => {
       const item = prev.find((i) => i._id === productId);
       if (item && item.quantity === 1 && delta === -1) {
-        toast.success("Removed from cart");
+        toast.success("Removed From Cart");
         return prev.filter((i) => i._id !== productId);
       }
       return prev.map((item) =>
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
 
   const removeFromCart = (productId) => {
     setCart((prev) => prev.filter((item) => item._id !== productId));
-    toast.success("Removed from cart");
+    toast.success("Removed From Cart");
   };
 
   const clearCart = () => {

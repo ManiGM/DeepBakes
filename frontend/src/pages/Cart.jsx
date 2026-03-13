@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import { orderApi } from "../services/api";
+import { orderApi, razorPayApi } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Cart.css";
 
 const Cart = () => {
   const { cart, user, clearCart, updateCartQuantity, removeFromCart } =
     useAuth();
+
   const [shippingDetails, setShippingDetails] = useState({
     name: user?.username || "",
     email: "",
     phone: "",
     address: "",
   });
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -21,56 +23,119 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
+
   const tax = subtotal * 0.05;
   const deliveryFee = subtotal > 500 ? 0 : 50;
   const total = subtotal + tax + deliveryFee;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "phone") {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 10) return;
       if (value.length === 1 && !/[6-9]/.test(value)) return;
     }
+
     setShippingDetails((prev) => ({ ...prev, [name]: value }));
   };
 
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePlaceOrder = async () => {
-    if (!shippingDetails.address || !shippingDetails.phone) {
-      toast.error("Please fill in all shipping details");
+    if (
+      !shippingDetails.address ||
+      !shippingDetails.phone ||
+      !shippingDetails.email
+    ) {
+      toast.error("Please Fill All Shipping Details");
       return;
     }
     try {
       setLoading(true);
-      const orderData = {
-        userId: user.id,
-        userName: shippingDetails.name,
-        email: shippingDetails.email,
-        phone: shippingDetails.phone,
-        address: shippingDetails.address,
-        items: cart.map(({ _id, name, price, quantity }) => ({
-          productId: _id,
-          name,
-          price,
-          quantity,
-        })),
-        subtotal,
-        tax,
-        deliveryFee,
-        total,
-      };
-      const response = await orderApi.create(orderData);
-      if (response?.status === 200) {
-        toast.success("Order placed successfully! 🎂");
-        clearCart();
+      const res = await loadRazorpay();
+      if (!res) {
+        toast.error("Razorpay SDK Failed To Load.");
         setLoading(false);
-        navigate("/my-orders");
-      } else {
-        throw new Error("Order failed");
+        return;
       }
+      let data = {
+        amount: total,
+      };
+      const paymentOrder = await razorPayApi.create(data);
+      const order = paymentOrder;
+      const options = {
+        key: "rzp_test_SQGydgxnwffSyE",
+        amount: order.amount,
+        currency: "INR",
+        name: "Deep Bakes",
+        description: "Cake Order Payment",
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            const orderData = {
+              userId: user.id,
+              userName: shippingDetails.name,
+              email: shippingDetails.email,
+              phone: shippingDetails.phone,
+              address: shippingDetails.address,
+              paymentId: response.razorpay_payment_id,
+              items: cart.map(({ _id, name, price, quantity }) => ({
+                productId: _id,
+                name,
+                price,
+                quantity,
+              })),
+              subtotal,
+              tax,
+              deliveryFee,
+              total,
+            };
+            const apiResponse = await orderApi.create(orderData);
+            if (apiResponse?.status === 200) {
+              toast.success("Payment Successful 🎉 Order placed!");
+              clearCart();
+              navigate("/my-orders");
+            } else {
+              throw new Error("Order Failed");
+            }
+          } catch (err) {
+            toast.error("Order Saving Failed After Payment");
+          }
+        },
+        prefill: {
+          name: shippingDetails.name,
+          email: shippingDetails.email,
+          contact: shippingDetails.phone,
+        },
+        theme: {
+          color: "#ff4d6d",
+        },
+        modal: {
+          ondismiss: function () {
+            toast.error("Payment cancelled");
+            setLoading(false);
+          },
+        },
+      };
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.on("payment.failed", function () {
+        toast.error("Payment Failed. Please try again.");
+        setLoading(false);
+      });
+      paymentObject.open();
+      setLoading(false);
     } catch (error) {
-      console.error("Order failed:", error);
-      toast.error("Order failed. Please try again.");
+      console.error(error);
+      toast.error("Payment initialization failed");
       setLoading(false);
     }
   };
@@ -79,7 +144,7 @@ const Cart = () => {
     return (
       <div className="orders-loading">
         <div className="spinner"></div>
-        <p>Placing your Order...</p>
+        <p>Processing Payment...</p>
       </div>
     );
   }
@@ -95,6 +160,7 @@ const Cart = () => {
       </div>
     );
   }
+
   return (
     <div className="cart-page">
       <h1>Your Sweet Cart</h1>
@@ -162,7 +228,7 @@ const Cart = () => {
             <span>Delivery Fee (Applicable for below 500)</span>
             <span>
               <span>&#8377;</span>
-              {deliveryFee === 0 ? "Free" : `${deliveryFee.toFixed(2)}`}
+              {deliveryFee === 0 ? "Free" : deliveryFee.toFixed(2)}
             </span>
           </div>
           <div className="summary-row total">
@@ -190,8 +256,6 @@ const Cart = () => {
               value={shippingDetails.email}
               onChange={handleInputChange}
               className="form-input1"
-              required
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
             />
             <input
               type="tel"
@@ -200,7 +264,6 @@ const Cart = () => {
               value={shippingDetails.phone}
               onChange={handleInputChange}
               className="form-input1"
-              pattern="[6-9]{1}[0-9]{9}"
               maxLength={10}
             />
             <textarea
@@ -216,7 +279,7 @@ const Cart = () => {
               onClick={handlePlaceOrder}
               disabled={loading}
             >
-              {loading ? "Processing..." : "Place Order"}
+              {loading ? "Processing..." : "Pay & Place Order"}
             </button>
           </div>
           <p className="cart-quote">

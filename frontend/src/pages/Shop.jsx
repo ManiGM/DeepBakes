@@ -24,12 +24,24 @@ const Shop = () => {
     }
   };
 
+  const getCategory = (name) => {
+    const n = name.toLowerCase().trim();
+    if (n.includes("cookie")) return "cookies";
+    if (n.includes("cupcake") || n.includes("cake")) return "cupcakes";
+    if (n.includes("brownie")) return "brownies";
+    if (n.includes("doughnut")) return "doughnuts";
+    if (n.includes("chocolate")) return "chocolates";
+    if (n.includes("bomboloni")) return "bomboloni";
+    if (n.includes("cracker")) return "crackers";
+    if (n.includes("malai toast")) return "malaiToast";
+    return "other";
+  };
+
   const filteredProducts =
     filter === "all"
       ? products
-      : products.filter((product) =>
-          product.name.toLowerCase().includes(filter.toLowerCase()),
-        );
+      : products.filter((product) => getCategory(product.name) === filter);
+
   if (loading) {
     return (
       <div className="orders-loading">
@@ -105,7 +117,7 @@ const Shop = () => {
       </div>
       {filteredProducts.length === 0 ? (
         <div className="no-products">
-          <p>No products found matching your search.</p>
+          <p>No Products Found Matching Your Search...</p>
         </div>
       ) : (
         <div className="products-grid">

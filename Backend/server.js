@@ -3,10 +3,12 @@ const dns = require("dns");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const Razorpay = require("razorpay");
 const bcrypt = require("bcryptjs");
 dns.setDefaultResultOrder("ipv4first");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const CryptoJS = require("crypto-js");
 const app = express();
 app.set("trust proxy", 1);
 const compression = require("compression");
@@ -26,6 +28,7 @@ app.use(
 
 const PORT = process.env.PORT || 2213;
 const SECRET = process.env.JWT_SECRET;
+const SECRET_KEY = process.env.SECRET_KEY_URL;
 
 mongoose.set("bufferCommands", false);
 mongoose.set("strictQuery", true);
@@ -88,18 +91,41 @@ const User = mongoose.model("User", UserSchema);
 const Product = mongoose.model("Product", ProductSchema);
 const Order = mongoose.model("Order", OrderSchema);
 
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+const decryptPassword = (password) => {
+  const bytes = CryptoJS.AES.decrypt(password, SECRET_KEY);
+  return bytes.toString(CryptoJS.enc.Utf8);
+};
+
+app.post("/payment/create-order", async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const order = await razorpay.orders.create({
+      amount: amount * 100,
+      currency: "INR",
+      receipt: "Receipt_" + Date.now(),
+    });
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: "Payment Order Failed" });
+  }
+});
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 465, // Port 465 is more stable on cloud firewalls
-  secure: true, // Required for 465
-  pool: true, // IMPORTANT: Keeps the connection alive
-  maxConnections: 5, // Limits simultaneous connections
-  maxMessages: 100, // Rotates connections after 100 emails
+  port: 465,
+  secure: true,
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS, // NO SPACES in Render Dashboard
+    pass: process.env.EMAIL_PASS,
   },
-  // High timeouts to handle Render's "cold starts"
   connectionTimeout: 60000,
   greetingTimeout: 60000,
   socketTimeout: 60000,
@@ -131,11 +157,12 @@ app.get("/health", (req, res) => {
 app.post("/register", async (req, res) => {
   try {
     const { username, phone, password } = req.body;
+    const decryptedPassword = decryptPassword(password);
     const exists = await User.findOne({ phone });
     if (exists) {
       return res.status(400).json({ message: "Phone Number Already Exists" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(decryptedPassword, 10);
     const user = new User({
       username,
       phone,
@@ -165,7 +192,8 @@ app.post("/login", async (req, res) => {
       query = { username: input };
     }
     const user = await User.findOne(query);
-    if (user && (await bcrypt.compare(req.body.password, user.password))) {
+    const decryptedPassword = decryptPassword(req.body.password);
+    if (user && (await bcrypt.compare(decryptedPassword, user.password))) {
       const token = jwt.sign(
         { id: user._id, role: user.role, username: user.username },
         SECRET,
@@ -204,7 +232,8 @@ app.post("/reset-password", async (req, res) => {
     if (!phone || !password) {
       return res.status(400).json({ message: "Phone and password required" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const decryptedPassword = decryptPassword(password);
+    const hashedPassword = await bcrypt.hash(decryptedPassword, 10);
     const updatedUser = await User.findOneAndUpdate(
       { phone },
       { password: hashedPassword },
@@ -271,9 +300,7 @@ app.post("/orders", async (req, res) => {
   try {
     const order = new Order(req.body);
     await order.save();
-    // ✅ SEND RESPONSE FIRST (important for production)
     res.status(200).json("Ordered");
-    // ✅ SEND EMAILS IN BACKGROUND (do not block API)
     setImmediate(async () => {
       try {
         await transporter.sendMail({
@@ -386,9 +413,7 @@ app.put("/orders/:id", async (req, res) => {
       { status: req.body.status },
       { new: true },
     );
-    // ✅ SEND RESPONSE FIRST (important)
     res.status(200).json("Updated");
-    // ✅ SEND EMAIL IN BACKGROUND (non-blocking)
     if (order?.email) {
       setImmediate(async () => {
         try {

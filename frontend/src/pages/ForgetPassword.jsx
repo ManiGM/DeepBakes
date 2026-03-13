@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import "../styles/Forms.css";
 import login_bg from "../assets/login_bg.jpg";
 import { Link } from "react-router-dom";
+import { encryptPassword } from "../services/api";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -114,9 +115,10 @@ const ForgotPassword = () => {
     if (!validatePassword()) return;
     try {
       setLoading(true);
+      const encryptedPassword = encryptPassword(formData.password);
       await authApi.resetPassword({
         phone: formData.phone,
-        password: formData.password,
+        password: encryptedPassword,
       });
       toast.success("Password Updated!");
       navigate("/login");
@@ -137,7 +139,7 @@ const ForgotPassword = () => {
         {step === 1 && (
           <form onSubmit={handleCheckPhone} className="auth-form" noValidate>
             <div className="form-group ">
-              <label style={{margin:"auto"}}>
+              <label style={{ margin: "auto" }}>
                 Phone Number <span className="required">*</span>
               </label>
               <input
@@ -149,7 +151,7 @@ const ForgotPassword = () => {
                 className={errors.phone ? "error" : ""}
                 disabled={loading}
                 maxLength="10"
-                style={{margin:"auto"}}
+                style={{ margin: "auto" }}
               />
               {errors.phone && (
                 <span className="field-error">{errors.phone}</span>
@@ -158,7 +160,7 @@ const ForgotPassword = () => {
             <button
               type="submit"
               className=" btn-primary"
-              style={{maxHeight:"50px",marginTop:"11%"}}
+              style={{ maxHeight: "50px", marginTop: "11%" }}
               disabled={loading}
             >
               {loading ? "Checking..." : "Verify Phone"}

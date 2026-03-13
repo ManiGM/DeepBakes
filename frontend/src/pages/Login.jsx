@@ -4,6 +4,7 @@ import { useAuth } from "../Context/AuthContext";
 import { authApi } from "../services/api";
 import "../styles/Forms.css";
 import login_bg from "../assets/login_bg.jpg";
+import { encryptPassword } from "../services/api";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -77,7 +78,13 @@ const Login = () => {
     }
     try {
       setLoading(true);
-      const response = await authApi.login(formData);
+      const encryptedPassword = encryptPassword(formData.password);
+      const { password, ...rest } = formData;
+      const userData = {
+        ...rest,
+        password: encryptedPassword,
+      };
+      const response = await authApi.login(userData);
       login(response.data);
       navigate("/");
     } catch (error) {
