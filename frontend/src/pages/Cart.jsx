@@ -117,9 +117,12 @@ const Cart = () => {
           contact: shippingDetails.phone,
         },
         theme: {
-          color: "#ff4d6d",
+          color: "#979ff9",
         },
         modal: {
+          backdropclose: false,
+          escape: false,
+          handleback: true,
           ondismiss: function () {
             toast.error("Payment cancelled");
             setLoading(false);
