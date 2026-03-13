@@ -73,7 +73,7 @@ const Cart = () => {
       const paymentOrder = await razorPayApi.create(data);
       const order = paymentOrder;
       const options = {
-        key: "rzp_test_SQGydgxnwffSyE",
+        key: "rzp_live_SQfpD89Jkdq4Bs",
         amount: order.amount,
         currency: "INR",
         name: "Deep Bakes",
