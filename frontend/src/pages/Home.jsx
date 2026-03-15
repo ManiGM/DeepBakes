@@ -16,7 +16,7 @@ const Home = () => {
   const testimonials = [
     {
       id: 1,
-      name: "Mani",
+      name: "Jayanth",
       comment:
         "Fresh, delicious, and delivered on time. My new favorite bakery!",
       rating: 5,
@@ -26,7 +26,8 @@ const Home = () => {
     {
       id: 2,
       name: "Poojita",
-      comment: "Ordered a custom birthday cake and it was absolutely gorgeous!",
+      comment:
+        "Ordered a custom birthday cake and it was absolutely delicious!",
       rating: 5,
       image: "https://i.pravatar.cc/150?img=47",
     },
@@ -143,12 +144,6 @@ const Home = () => {
                   <div className="slide-content">
                     <div className="hero-overlay"></div>
                     <div className="hero-content">
-                      {/* <span className="hero-badge">
-                      Deep Bakes
-                      <span className="tagline">
-                        Flavour of Purity, Taste of Home
-                      </span>
-                    </span> */}
                       <h1 className="hero-title">
                         {slide.title}
                         <span className="highlight">{slide.highlight}</span>
@@ -174,8 +169,6 @@ const Home = () => {
                 </div>
               ))}
             </div>
-
-            {/* Navigation Arrows */}
             <button className="carousel-arrow prev" onClick={prevSlide}>
               <svg
                 width="24"
@@ -200,22 +193,6 @@ const Home = () => {
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </button>
-
-            {/* Thumbnail Navigation */}
-            {/* <div className="carousel-thumbnails">
-            {heroSlides.map((slide, index) => (
-              <div
-                key={slide.id}
-                className={`thumbnail ${index === currentSlide ? "active" : ""}`}
-                onClick={() => goToSlide(index)}
-              >
-                <img src={slide.image} alt={slide.title} />
-                <div className="thumbnail-overlay"></div>
-              </div>
-            ))}
-          </div> */}
-
-            {/* Dots Indicator */}
             <div className="carousel-dots">
               {heroSlides.map((_, index) => (
                 <button
@@ -227,8 +204,6 @@ const Home = () => {
             </div>
           </div>
         </section>
-
-        {/* Rest of the sections remain the same */}
         <section className="categories-section">
           <div className="section-header">
             <span className="section-subtitle"></span>
@@ -264,13 +239,6 @@ const Home = () => {
               <p>Perfect bite-sized treats</p>
             </div>
           </div>
-          {/* <div className="category-card" style={{ marginTop: "30px" }}>
-            <div className="category-image">
-              <img src={Brownie} alt="Malai Toast" />
-            </div>
-            <h3>Brownies</h3>
-            <p>Dense • Gooey • Chocolate Loaded</p>
-          </div> */}
         </section>
         <section className="features-section">
           <div className="feature">
@@ -294,13 +262,6 @@ const Home = () => {
             <h3>Free Delivery</h3>
             <p>On orders over ₹500, delivered to your doorstep</p>
           </div>
-          {/* <div className="feature">
-          <div className="feature-icon-wrapper">
-            <span className="feature-icon">🎂</span>
-          </div>
-          <h3>Custom Orders</h3>
-          <p>Personalized cakes for your special occasions</p>
-        </div> */}
         </section>
         <section className="testimonials-section">
           <div className="section-header">
@@ -421,6 +382,13 @@ const Home = () => {
           </div>
         </section>
       </div>
+      <footer className="site-footer">
+        <div className="footer-content">
+          <span className="footer-right">
+            <p>© 2026 DeepBakes - All Rights Reserved.</p>
+          </span>
+        </div>
+      </footer>
     </>
   );
 };

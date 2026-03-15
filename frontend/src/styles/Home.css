@@ -253,6 +253,27 @@
   font-size: 0.9rem;
 }
 
+.site-footer {
+  width: 100%;
+  padding: 12px 20px;
+  background: #ffffff;
+  color: #000;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 14px;
+}
+.footer-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.footer-right {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
 /* Featured Cakes Section */
 .featured-section {
   padding: 80px 5%;
