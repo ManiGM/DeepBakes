@@ -123,7 +123,7 @@ const AddProduct = () => {
   return (
     <div className="admin-container">
       <div className="admin-card">
-        <h1>{id ? "Edit Delight" : "Add New Delight"}</h1>
+        {/* <h1>{id ? "Edit Delight" : "Add New Delight"}</h1> */}
         <form onSubmit={handleSubmit} className="admin-form">
           <div className="form-group2">
             <label htmlFor="name">
