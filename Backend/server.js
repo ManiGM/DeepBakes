@@ -9,8 +9,10 @@ dns.setDefaultResultOrder("ipv4first");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const CryptoJS = require("crypto-js");
+const crypto = require("crypto");
 const app = express();
 app.set("trust proxy", 1);
+app.use("/webhook", express.raw({ type: "application/json" }));
 const compression = require("compression");
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -101,17 +103,162 @@ const decryptPassword = (password) => {
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 
+// app.post("/payment/create-order", async (req, res) => {
+//   try {
+//     const { amount } = req.body;
+//     const order = await razorpay.orders.create({
+//       amount: amount * 100,
+//       currency: "INR",
+//       receipt: "Receipt_" + Date.now(),
+//     });
+//     res.json(order);
+//   } catch (err) {
+//     res.status(500).json({ error: "Payment Order Failed" });
+//   }
+// });
+
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    try {
+      // const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+      // const signature = req.headers["x-razorpay-signature"];
+      // const expectedSignature = crypto
+      //   .createHmac("sha256", secret)
+      //   .update(req.body)
+      //   .digest("hex");
+      // if (signature !== expectedSignature) {
+      //   return res.status(400).send("Invalid Signature");
+      // }
+      const event = JSON.parse(req.body.toString());
+      if (event.event === "payment.captured") {
+        const payment = event.payload.payment.entity;
+        const notes = payment.notes;
+        console.log("✅ payment", payment);
+        console.log("✅ notes", notes);
+        const orderData = {
+          userId: notes.userId,
+          userName: notes.userName,
+          email: notes.email,
+          phone: notes.phone,
+          address: notes.address,
+          items: JSON.parse(notes.items || "[]"),
+          total: Number(notes.total),
+          paymentId: payment.id,
+          status: "Pending",
+        };
+        const order = new Order(orderData);
+        console.log("✅ orderData", orderData);
+        await order.save();
+        console.log("✅ Order saved via webhook");
+
+        // ✅ EMAIL (same logic)
+        await transporter.sendMail({
+          from: `"DeepBakes Orders" <${process.env.EMAIL_USER}>`,
+          to: process.env.OWNER_EMAIL,
+          subject: `🆕 New Order Received — ${order.userName}`,
+          html: `
+    <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px;">
+      
+      <h2 style="color:#e91e63; margin-bottom:5px;">New Order Received</h2>
+      <p style="color:#555;">A new customer order has been placed.</p>
+
+      <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+
+      <h3 style="margin-bottom:10px;">Customer Details</h3>
+      <p><strong>Name:</strong> ${order.userName}</p>
+      <p><strong>Email:</strong> ${order.email}</p>
+      <p><strong>Phone:</strong> ${order.phone}</p>
+      <p><strong>Address:</strong> ${order.address}</p>
+
+      <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+
+      <h3 style="margin-bottom:10px;">Order Summary</h3>
+      <p><strong>Total Amount:</strong> ₹${order.total.toFixed(2)}</p>
+      <p><strong>Status:</strong> ${order.status}</p>
+
+      <div style="margin-top:25px; padding:15px; background:#fff3f8; border-radius:6px;">
+        <strong>Please log in to the admin panel to process this order.</strong>
+      </div>
+
+      <p style="margin-top:25px; font-size:12px; color:#888;">
+        This is an automated notification from DeepBakes.
+      </p>
+
+    </div>
+  </div>
+  `,
+        });
+        await transporter.sendMail({
+          from: `"DeepBakes" <${process.env.EMAIL_USER}>`,
+          to: order.email,
+          subject: "✅ Order Confirmed — DeepBakes",
+          html: `
+  <div style="font-family: Arial, sans-serif; background:#f6f6f6; padding:20px;">
+    <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:8px;">
+
+      <h2 style="color:#e91e63;">Thank you for your order!</h2>
+      <p>Hello <strong>${order.userName}</strong>,</p>
+      <p>We’ve successfully received your order and it is now being processed.</p>
+
+      <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+
+      <h3>Order Details</h3>
+      <p><strong>Total Amount:</strong> ₹${order.total.toFixed(2)}</p>
+      <p><strong>Delivery Address:</strong> ${order.address}</p>
+      <p><strong>Status:</strong> Pending</p>
+
+      <div style="margin-top:20px; padding:15px; background:#f0f8ff; border-radius:6px;">
+        You will receive another email when your order is accepted and delivered.
+      </div>
+
+      <p style="margin-top:25px;">
+        We appreciate your trust in DeepBakes 💖
+      </p>
+
+      <p style="font-size:12px; color:#888;">
+        This is an automated email. Please do not reply.
+      </p>
+
+    </div>
+  </div>
+  `,
+        });
+        console.log("Order Emails Sent Successfully");
+      }
+
+      res.status(200).json({ status: "ok" });
+    } catch (err) {
+      console.error("Webhook Error:", err);
+      res.status(500).send("Webhook Failed");
+    }
+  },
+);
+
 app.post("/payment/create-order", async (req, res) => {
   try {
-    const { amount } = req.body;
+    const { amount, userId, userName, email, phone, address, items, total } =
+      req.body;
     const order = await razorpay.orders.create({
       amount: amount * 100,
       currency: "INR",
       receipt: "Receipt_" + Date.now(),
+      notes: {
+        userId,
+        userName,
+        email,
+        phone,
+        address,
+        items: JSON.stringify(items),
+        total,
+      },
     });
     res.json(order);
   } catch (err) {
-    res.status(500).json({ error: "Payment Order Failed" });
+    console.error(err);
+    res.status(500).json({ error: "Order Creation Failed" });
   }
 });
 
