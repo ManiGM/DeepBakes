@@ -69,9 +69,20 @@ const Cart = () => {
       }
       let data = {
         amount: total,
+        userId: user.id,
+        userName: shippingDetails.name,
+        email: shippingDetails.email,
+        phone: shippingDetails.phone,
+        address: shippingDetails.address,
+        items: cart.map(({ _id, name, price, quantity }) => ({
+          productId: _id,
+          name,
+          price,
+          quantity,
+        })),
+        total,
       };
-      const paymentOrder = await razorPayApi.create(data);
-      const order = paymentOrder;
+      const order = await razorPayApi.create(data);
       const options = {
         key: "rzp_live_SQfpD89Jkdq4Bs",
         amount: order.amount,
@@ -79,37 +90,26 @@ const Cart = () => {
         name: "Deep Bakes",
         description: "Cake Order Payment",
         order_id: order.id,
-        handler: async function (response) {
-          try {
-            const orderData = {
-              userId: user.id,
-              userName: shippingDetails.name,
-              email: shippingDetails.email,
-              phone: shippingDetails.phone,
-              address: shippingDetails.address,
-              paymentId: response.razorpay_payment_id,
-              items: cart.map(({ _id, name, price, quantity }) => ({
-                productId: _id,
-                name,
-                price,
-                quantity,
-              })),
-              subtotal,
-              tax,
-              deliveryFee,
-              total,
-            };
-            const apiResponse = await orderApi.create(orderData);
-            if (apiResponse?.status === 200) {
-              toast.success("Payment Successful 🎉 Order placed!");
-              clearCart();
-              navigate("/my-orders");
-            } else {
-              throw new Error("Order Failed");
-            }
-          } catch (err) {
-            toast.error("Order Saving Failed After Payment");
+        handler: async function () {
+          toast.success("Payment Successful 🎉, Order Placed");
+          clearCart();
+          // setTimeout(() => {
+          //   navigate("/my-orders");
+          // }, 500);
+          let attempts = 0;
+          let found = false;
+          while (attempts < 5 && !found) {
+            try {
+              const res = await orderApi.getByUser(user.id);
+              if (res.data.length > 0) {
+                found = true;
+                break;
+              }
+            } catch (err) {}
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            attempts++;
           }
+          navigate("/my-orders");
         },
         prefill: {
           name: shippingDetails.name,
@@ -120,11 +120,8 @@ const Cart = () => {
           color: "#979ff9",
         },
         modal: {
-          backdropclose: false,
-          escape: false,
-          handleback: true,
           ondismiss: function () {
-            toast.error("Payment cancelled");
+            toast.error("Payment Cancelled");
             setLoading(false);
           },
         },
@@ -135,7 +132,6 @@ const Cart = () => {
         setLoading(false);
       });
       paymentObject.open();
-      setLoading(false);
     } catch (error) {
       console.error(error);
       toast.error("Payment initialization failed");
