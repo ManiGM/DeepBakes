@@ -135,8 +135,10 @@ app.post(
       if (event.event === "payment.captured") {
         const payment = event.payload.payment.entity;
         const notes = payment.notes;
-        console.log("✅ payment", payment);
-        console.log("✅ notes", notes);
+        const existingOrder = await Order.findOne({ paymentId: payment.id });
+        if (existingOrder) {
+          return res.status(200).json({ status: "OK" });
+        }
         const orderData = {
           userId: notes.userId,
           userName: notes.userName,
@@ -149,11 +151,7 @@ app.post(
           status: "Pending",
         };
         const order = new Order(orderData);
-        console.log("✅ orderData", orderData);
         await order.save();
-        console.log("✅ Order saved via webhook");
-
-        // ✅ EMAIL (same logic)
         await transporter.sendMail({
           from: `"DeepBakes Orders" <${process.env.EMAIL_USER}>`,
           to: process.env.OWNER_EMAIL,
