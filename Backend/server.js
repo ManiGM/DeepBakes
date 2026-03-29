@@ -103,51 +103,41 @@ const decryptPassword = (password) => {
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 
-// app.post("/payment/create-order", async (req, res) => {
-//   try {
-//     const { amount } = req.body;
-//     const order = await razorpay.orders.create({
-//       amount: amount * 100,
-//       currency: "INR",
-//       receipt: "Receipt_" + Date.now(),
-//     });
-//     res.json(order);
-//   } catch (err) {
-//     res.status(500).json({ error: "Payment Order Failed" });
-//   }
-// });
-
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
   async (req, res) => {
     try {
-      // const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
-      // const signature = req.headers["x-razorpay-signature"];
-      // const expectedSignature = crypto
-      //   .createHmac("sha256", secret)
-      //   .update(req.body)
-      //   .digest("hex");
-      // if (signature !== expectedSignature) {
-      //   return res.status(400).send("Invalid Signature");
-      // }
       const event = JSON.parse(req.body.toString());
       if (event.event === "payment.captured") {
         const payment = event.payload.payment.entity;
         const notes = payment.notes;
-        const existingOrder = await Order.findOne({ paymentId: payment.id });
+        const paymentId = payment?.id;
+        if (!paymentId) {
+          return res.status(400).send("No paymentId");
+        }
+        let existingOrder = await Order.findOne({ paymentId });
+        if (!existingOrder) {
+          existingOrder = await Order.findOne({
+            email: notes?.email,
+            total: Number(notes?.total || 0),
+            createdAt: {
+              $gte: new Date(Date.now() - 5 * 60 * 1000),
+            },
+          });
+        }
         if (existingOrder) {
           return res.status(200).json({ status: "OK" });
         }
         const orderData = {
-          userId: notes.userId,
-          userName: notes.userName,
-          email: notes.email,
-          phone: notes.phone,
-          address: notes.address,
-          items: JSON.parse(notes.items || "[]"),
-          total: Number(notes.total),
-          paymentId: payment.id,
+          userId: notes?.userId || "",
+          userName: notes?.userName || "",
+          email: notes?.email || "",
+          phone: notes?.phone || "",
+          address: notes?.address || "",
+          items: JSON.parse(notes?.items || "[]"),
+          total: Number(notes?.total || 0),
+          paymentId,
           status: "Pending",
         };
         const order = new Order(orderData);
