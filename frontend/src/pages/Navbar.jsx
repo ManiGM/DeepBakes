@@ -115,10 +115,6 @@ const Navbar = () => {
           )}
         </div>
       </div>
-
-      {menuOpen && (
-        <div className="nav-backdrop" onClick={() => setMenuOpen(false)} />
-      )}
     </nav>
   );
 };
