@@ -1,15 +1,18 @@
 import { useAuth } from "../Context/AuthContext";
 import "../styles/Shop.css";
-import { productApi } from "../services/api";
+import { productApi, API_BASE_URL } from "../services/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
 const ProductCard = ({ product, onDeleteSuccess }) => {
   const { addToCart, updateCartQuantity, cart, isAdmin } = useAuth();
   const cartItem = cart.find((item) => item._id === product._id);
-  // const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
+  const description = product.description || "";
+  const isLong = description.length > 80;
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -34,23 +37,49 @@ const ProductCard = ({ product, onDeleteSuccess }) => {
   };
 
   return (
-    <div className="product-card" style={{ position: "relative" }}>
+    <div className="product-card">
       <div className="product-image">
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img
+          src={`${API_BASE_URL}/products/${product._id}/image`}
+          alt={product.name}
+          loading="lazy"
+          decoding="async"
+        />
+        {isAdmin && (
+          <div className="product-admin-actions">
+            <button
+              className="admin-icon-btn edit"
+              onClick={() => navigate(`/add-product/${product._id}`)}
+              title="Edit"
+            >
+              <Pencil size={15} />
+            </button>
+            <button
+              className="admin-icon-btn delete"
+              onClick={() => onDelete(product._id)}
+              disabled={deleting}
+              title="Delete"
+            >
+              <Trash2 size={15} />
+            </button>
+          </div>
+        )}
       </div>
       <div className="product-details">
         <h3 className="product-name">{product.name}</h3>
-        <p className="product-description">{product.description}</p>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "8px",
-            marginTop: "8px",
-            marginBottom: "0px",
-          }}
-        >
+        <p className={`product-description ${expanded ? "expanded" : ""}`}>
+          {description}
+        </p>
+        {isLong && (
+          <button
+            type="button"
+            className="show-more-btn"
+            onClick={() => setExpanded((prev) => !prev)}
+          >
+            {expanded ? "Show less" : "Show more"}
+          </button>
+        )}
+        <div className="product-footer">
           <div className="product-price">
             <span>&#8377;</span>
             {Number(product.price || 0).toFixed(2)}
@@ -81,43 +110,6 @@ const ProductCard = ({ product, onDeleteSuccess }) => {
             </div>
           )}
         </div>
-        {isAdmin && (
-          <>
-            <button
-              onClick={() => navigate(`/add-product/${product._id}`)}
-              style={{
-                position: "absolute",
-                top: "8px",
-                right: "35px",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                fontSize: "14px",
-                padding: "4px",
-                color: "#007bff",
-              }}
-            >
-              ✏️
-            </button>
-            <button
-              onClick={() => onDelete(product._id)}
-              disabled={deleting}
-              style={{
-                position: "absolute",
-                top: "8px",
-                right: "8px",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                fontSize: "14px",
-                color: "#540505",
-                padding: "4px",
-              }}
-            >
-              {deleting ? "Deleting..." : "❌"}
-            </button>
-          </>
-        )}
       </div>
     </div>
   );

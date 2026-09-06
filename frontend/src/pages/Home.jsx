@@ -8,7 +8,6 @@ import cookies from "../assets/cookies.jpeg";
 import Donuts from "../assets/LoginImage.jpg";
 import Bananna from "../assets/Bananna.jpeg";
 import Brownie from "../assets/brownie.jpeg";
-import Apricot from "../assets/Apricot.jpeg";
 import malaiToast from "../assets/MalaiToast.jpg";
 
 const Home = () => {

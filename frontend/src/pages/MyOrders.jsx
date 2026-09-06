@@ -14,6 +14,7 @@ const MyOrders = () => {
     if (user?.id) {
       fetchUserOrders();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
   const fetchUserOrders = async () => {
@@ -84,6 +85,21 @@ const MyOrders = () => {
         </div>
       ) : (
         <>
+          <div className="filters-bar">
+            {["all", "pending", "accepted", "delivered", "rejected"].map(
+              (status) => (
+                <button
+                  key={status}
+                  className={`filter-btn ${filter === status ? "active" : ""}`}
+                  onClick={() => setFilter(status)}
+                >
+                  {status === "all"
+                    ? "All Orders"
+                    : status.charAt(0).toUpperCase() + status.slice(1)}
+                </button>
+              ),
+            )}
+          </div>
           <div className="orders-container">
             {filteredOrders.length === 0 ? (
               <div className="no-filtered-orders">

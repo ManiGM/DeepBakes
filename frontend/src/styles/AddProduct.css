@@ -1,51 +1,42 @@
-/* Page Background */
 .admin-container {
-  min-height: 1400px;
-  background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+  min-height: calc(100vh - var(--nav-height));
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  font-family: "Poppins", sans-serif;
+  padding: 40px 20px 60px;
 }
 
-/* Card */
 .admin-card {
   width: 100%;
-  max-width: 750px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.5s ease-in-out;
+  max-width: 560px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 36px;
 }
 
-.admin-card h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ff6b6b;
-  margin-bottom: 5px;
-}
-
-.admin-subtitle {
-  color: #555;
-  font-size: 14px;
-  margin-bottom: 30px;
-}
-
-/* Form Layout */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group2 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-group2 label {
+  font-size: 0.85rem;
   font-weight: 600;
-  margin-bottom: 6px;
-  display: block;
-  color: #333;
+  color: var(--color-text);
 }
 
 .form-group2 input,
@@ -53,183 +44,105 @@
 .form-select1 {
   width: 100%;
   padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  background: #fff;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg);
+  font-size: 0.92rem;
+  font-family: inherit;
+  color: var(--color-text);
+  transition: border-color var(--transition);
 }
 
 .form-group2 input:focus,
 .form-group2 textarea:focus,
 .form-select1:focus {
-  border-color: #ff6b6b;
-  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
   outline: none;
+  border-color: var(--color-primary);
 }
 
-/* Two column row */
-.form-row {
-  display: flex;
-  gap: 20px;
+.form-group2 textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
-.form-row .form-group {
-  flex: 1;
+.form-select1.custom-arrow {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237a6a5f' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
 }
 
-/* Image Upload */
 .image-upload-area2 {
-  position: relative;
-  border: 2px dashed #ffb6b9;
-  padding: 10px;
-  border-radius: 16px;
-  text-align: center;
-  background: #fff8f8;
-  min-height: 120px;
-  transition: all 0.3s ease;
-}
-
-.image-upload-area2:hover {
-  background: #ffecec;
-  border-color: #ff6b6b;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  background: var(--color-bg);
 }
 
 .file-input {
   width: 100%;
-  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
 }
 
 .image-preview {
   position: relative;
-  margin-top: 15px;
+  margin-top: 14px;
+  width: 140px;
 }
 
 .image-preview img {
-  width: 100%;
-  min-height: 200px;
+  width: 140px;
+  height: 140px;
   object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .remove-image {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  background: #ff4d4d;
-  color: white;
-  border: none;
+  top: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  border: none;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* Checkbox */
-.checkbox-group {
   display: flex;
   align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-weight: 500;
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
 }
 
-/* Buttons */
 .form-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 8px;
 }
 
-.btn {
-  padding: 10px 22px;
-  border-radius: 30px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.form-actions .btn,
+.form-actions .btn-secondary1,
+.form-actions .btn-primary1 {
+  flex: 1;
 }
 
-.btn-secondary1 {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.btn-secondary1:hover {
-  background: #cfcfcf;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
-  color: rgb(11, 9, 9);
-  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(255, 107, 107, 0.5);
-}
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Hint */
-.form-hint {
-  font-size: 12px;
-  color: #777;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
-
+@media (max-width: 520px) {
   .admin-card {
-    padding: 25px;
+    padding: 26px 20px;
   }
-}
-.btn-primary2 {
-  background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
-  color: rgb(115, 93, 93);
-  box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-}
 
-.btn-primary2:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(109, 89, 89, 0.5);
-}
-
-.custom-arrow {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"%3E%3Cpath d="M0 0h10l-5 6z" fill="%2301627d" /%3E%3C/svg%3E');
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 10px;
-  padding-right: 30px;
+  .form-row {
+    grid-template-columns: 1fr;
+  }
 }

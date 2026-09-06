@@ -21,6 +21,7 @@ const AdminOrders = () => {
 
   useEffect(() => {
     calculateStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders]);
 
   const fetchOrders = async () => {

@@ -108,19 +108,6 @@ const Login = () => {
         {errors.form && <div className="error-message">{errors.form}</div>}
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            {/* <label htmlFor="username">
-              UserName/Phone Number<span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Enter your username"
-              className={errors.username ? "error" : ""}
-              disabled={loading}
-            /> */}
             <label htmlFor="username">
               UserName/Phone <span className="required">*</span>
             </label>

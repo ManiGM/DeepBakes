@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Suspense, lazy } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,62 +10,66 @@ import { AuthProvider } from "./Context/AuthContext";
 import Navbar from "./pages/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Cart from "./pages/Cart";
-import AddProduct from "./pages/AddProduct";
-import AdminOrders from "./pages/AdminOrders";
-import MyOrders from "./pages/MyOrders";
-import ForgotPassword from "./pages/ForgetPassword";
+import PageLoader from "./components/PageLoader";
 import "./styles/App.css";
-import API_BASE_URL from "../src/services/api";
+import { API_BASE_URL } from "./services/api";
+
+const Shop = lazy(() => import("./pages/Shop"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Cart = lazy(() => import("./pages/Cart"));
+const AddProduct = lazy(() => import("./pages/AddProduct"));
+const AdminOrders = lazy(() => import("./pages/AdminOrders"));
+const MyOrders = lazy(() => import("./pages/MyOrders"));
+const ForgotPassword = lazy(() => import("./pages/ForgetPassword"));
 
 function AppContent() {
   return (
     <>
       <Navbar />
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgetPassword" element={<ForgotPassword />} />
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <Cart />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/add-product/:id?"
-            element={
-              <ProtectedRoute adminOnly>
-                <AddProduct />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin-orders"
-            element={
-              <ProtectedRoute adminOnly>
-                <AdminOrders />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/my-orders"
-            element={
-              <ProtectedRoute>
-                <MyOrders />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgetPassword" element={<ForgotPassword />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/add-product/:id?"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AddProduct />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin-orders"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-orders"
+              element={
+                <ProtectedRoute>
+                  <MyOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
     </>
   );

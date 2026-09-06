@@ -53,11 +53,7 @@ const Shop = () => {
 
   return (
     <div className="shop-page">
-      <div
-        className="shop-header"
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
-        {/* <h1 style={{ color: "#4c1d3b" }}>Our Delights</h1> */}
+      <div className="shop-header">
         <div className="filters-bar">
           <button
             className={`filter-btn ${filter === "all" ? "active" : ""}`}

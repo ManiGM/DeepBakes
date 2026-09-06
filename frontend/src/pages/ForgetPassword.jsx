@@ -138,8 +138,8 @@ const ForgotPassword = () => {
         <h1>Reset Password</h1>
         {step === 1 && (
           <form onSubmit={handleCheckPhone} className="auth-form" noValidate>
-            <div className="form-group ">
-              <label style={{ margin: "auto" }}>
+            <div className="form-group">
+              <label>
                 Phone Number <span className="required">*</span>
               </label>
               <input
@@ -151,7 +151,6 @@ const ForgotPassword = () => {
                 className={errors.phone ? "error" : ""}
                 disabled={loading}
                 maxLength="10"
-                style={{ margin: "auto" }}
               />
               {errors.phone && (
                 <span className="field-error">{errors.phone}</span>
@@ -159,8 +158,7 @@ const ForgotPassword = () => {
             </div>
             <button
               type="submit"
-              className=" btn-primary"
-              style={{ maxHeight: "50px", marginTop: "11%" }}
+              className="btn btn-primary btn-block1"
               disabled={loading}
             >
               {loading ? "Checking..." : "Verify Phone"}

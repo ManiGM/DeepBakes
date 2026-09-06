@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
-import { orderApi, razorPayApi } from "../services/api";
+import { orderApi, razorPayApi, API_BASE_URL } from "../services/api";
 import toast from "react-hot-toast";
 import "../styles/Cart.css";
 
@@ -90,25 +90,30 @@ const Cart = () => {
         name: "Deep Bakes",
         description: "Cake Order Payment",
         order_id: order.id,
-        handler: async function () {
+        handler: async function (response) {
           toast.success("Payment Successful 🎉, Order Placed");
           clearCart();
-          // setTimeout(() => {
-          //   navigate("/my-orders");
-          // }, 500);
+          const paymentId = response?.razorpay_payment_id;
           let attempts = 0;
           let found = false;
-          while (attempts < 5 && !found) {
+          while (attempts < 15 && !found) {
             try {
               const res = await orderApi.getByUser(user.id);
-              if (res.data.length > 0) {
-                found = true;
-                break;
-              }
+              found = paymentId
+                ? res.data.some((o) => o.paymentId === paymentId)
+                : res.data.length > 0;
+              if (found) break;
             } catch (err) {}
             await new Promise((resolve) => setTimeout(resolve, 2000));
             attempts++;
           }
+          if (!found) {
+            toast.success(
+              "Payment successful! Your order is being confirmed and will appear here shortly — refresh in a moment if it's not showing yet.",
+              { duration: 6000 },
+            );
+          }
+          setLoading(false);
           navigate("/my-orders");
         },
         prefill: {
@@ -168,9 +173,10 @@ const Cart = () => {
           {cart.map((item) => (
             <div key={item._id} className="cart-item">
               <img
-                src={item.image}
+                src={`${API_BASE_URL}/products/${item._id}/image`}
                 alt={item.name}
                 className="cart-item-image"
+                loading="lazy"
               />
               <div className="cart-item-details">
                 <h3>{item.name}</h3>

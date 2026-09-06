@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import PageLoader from "./PageLoader";
 
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { isAuthenticated, isAdmin, loading } = useAuth();
   if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
+    return <PageLoader />;
   }
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
