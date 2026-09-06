@@ -29,14 +29,22 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <button
-        className="nav-toggle"
-        onClick={() => setMenuOpen((prev) => !prev)}
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-      >
-        {menuOpen ? <X size={22} /> : <Menu size={22} />}
-      </button>
+      <div className="mobile-top-actions">
+        {isAuthenticated && !isAdmin && cartItemCount > 0 && (
+          <Link to="/cart" className="mobile-cart-link" aria-label="Cart">
+            <ShoppingCart size={21} />
+            <span className="cart-badge">{cartItemCount}</span>
+          </Link>
+        )}
+        <button
+          className="nav-toggle"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+        >
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
 
       {menuOpen && (
         <div className="nav-backdrop" onClick={() => setMenuOpen(false)} />

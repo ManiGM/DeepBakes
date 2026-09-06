@@ -33,6 +33,16 @@
   border-radius: var(--radius-sm);
 }
 
+.mobile-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-cart-link {
+  display: none;
+}
+
 .nav-toggle {
   display: none;
   background: none;
@@ -216,6 +226,27 @@
 
   .nav-toggle {
     display: flex;
+  }
+
+  .mobile-cart-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: var(--color-text);
+  }
+
+  .mobile-cart-link:hover {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+
+  .mobile-cart-link .cart-badge {
+    top: -2px;
+    right: -2px;
   }
 
   .nav-collapse {
